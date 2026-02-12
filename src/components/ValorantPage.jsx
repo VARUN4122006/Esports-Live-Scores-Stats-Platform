@@ -58,7 +58,7 @@ const ValorantPage = ({ onBack }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen bg-[#0a0a0c] text-white pt-24 pb-20 relative overflow-hidden"
+            className="min-h-screen bg-[#0a0a0c] text-white pt-24 pb-20 relative overflow-hidden font-outfit"
             style={{ backgroundImage: 'radial-gradient(circle at 50% -20%, rgba(255, 70, 85, 0.15), transparent)' }}
         >
             {/* Cinematic Background Layer */}

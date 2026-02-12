@@ -16,13 +16,16 @@ const CTA = () => {
                     viewport={{ once: true }}
                     className="max-w-3xl mx-auto"
                 >
-                    <h2 className="text-4xl md:text-6xl font-black mb-8 tracking-tight">
+                    <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">
                         Track every match.<br />
                         Analyze every player.<br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-green to-neon-blue">
                             Stay ahead in esports.
                         </span>
                     </h2>
+                    <p className="text-gray-400 text-lg md:text-2xl mb-12 max-w-2xl mx-auto font-normal">
+                        Join thousands of gamers who rely on our real-time data to master their favorite titles.
+                    </p>
                 </motion.div>
             </div>
         </section>

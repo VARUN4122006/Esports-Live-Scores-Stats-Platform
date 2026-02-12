@@ -58,7 +58,7 @@ const CS2Page = ({ onBack }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen bg-[#070707] text-white pt-24 pb-20 relative overflow-hidden"
+            className="min-h-screen bg-[#070707] text-white pt-24 pb-20 relative overflow-hidden font-outfit"
             style={{ backgroundImage: 'radial-gradient(circle at 50% -20%, rgba(255, 183, 0, 0.1), transparent)' }}
         >
             {/* Cinematic Background Layer */}

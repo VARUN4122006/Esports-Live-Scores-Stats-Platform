@@ -58,7 +58,7 @@ const FreeFirePage = ({ onBack }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen bg-[#050505] text-white pt-24 pb-20 relative overflow-hidden"
+            className="min-h-screen bg-[#050505] text-white pt-24 pb-20 relative overflow-hidden font-outfit"
             style={{ backgroundImage: 'radial-gradient(circle at 50% -20%, rgba(255, 215, 0, 0.15), transparent)' }}
         >
             <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">

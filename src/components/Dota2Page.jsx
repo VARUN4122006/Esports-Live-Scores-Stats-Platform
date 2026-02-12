@@ -58,7 +58,7 @@ const Dota2Page = ({ onBack }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen bg-[#07050a] text-white pt-24 pb-20 relative overflow-hidden"
+            className="min-h-screen bg-[#07050a] text-white pt-24 pb-20 relative overflow-hidden font-outfit"
             style={{ backgroundImage: 'radial-gradient(circle at 50% -20%, rgba(168, 85, 247, 0.15), transparent)' }}
         >
             {/* Cinematic Background Layer */}

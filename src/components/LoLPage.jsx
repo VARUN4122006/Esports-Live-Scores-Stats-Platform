@@ -56,7 +56,7 @@ const LoLPage = ({ onBack }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen bg-[#05080a] text-white pt-24 pb-20 relative overflow-hidden"
+            className="min-h-screen bg-[#05080a] text-white pt-24 pb-20 relative overflow-hidden font-outfit"
             style={{ backgroundImage: 'radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.15), transparent)' }}
         >
             {/* Cinematic Background Layer */}

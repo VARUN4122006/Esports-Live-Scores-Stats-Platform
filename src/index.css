@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 @theme {
   --color-esports-dark: #0a0a0a;
@@ -8,6 +9,7 @@
   --color-neon-purple: #bc13fe;
 
   --font-sans: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
 }
 
 @layer base {

@@ -36,7 +36,7 @@ const Features = () => {
                         viewport={{ once: true }}
                         className="space-y-8"
                     >
-                        <h2 className="text-4xl font-black leading-tight">
+                        <h2 className="text-4xl font-bold leading-tight">
                             Powerful <span className="text-neon-blue">Features</span><br />
                             For The Serious Fan
                         </h2>

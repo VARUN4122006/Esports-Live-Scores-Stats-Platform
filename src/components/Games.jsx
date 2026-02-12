@@ -22,12 +22,9 @@ const Games = ({ onGameSelect }) => {
                     className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
                 >
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-black mb-2">Supported <span className="text-neon-green">Games</span></h2>
+                        <h2 className="text-4xl md:text-5xl font-black mb-2 tracking-tight">Supported <span className="text-neon-green">Games</span></h2>
                         <p className="text-gray-400"> comprehensive analytics for the biggest titles.</p>
                     </div>
-                    <button className="text-neon-green font-bold uppercase tracking-wider hover:text-white transition-colors">
-                        View All Games →
-                    </button>
                 </motion.div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
@@ -65,7 +62,7 @@ const Games = ({ onGameSelect }) => {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                                 <div className="absolute bottom-0 left-0 w-full p-4">
-                                    <h3 className="text-white font-bold text-center group-hover:text-neon-green transition-colors">{game.name}</h3>
+                                    <h3 className="text-white font-medium text-center group-hover:text-neon-green transition-colors font-outfit">{game.name}</h3>
                                 </div>
                             </div>
                         </motion.div>

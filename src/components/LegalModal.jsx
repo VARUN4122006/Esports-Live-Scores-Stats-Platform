@@ -122,7 +122,7 @@ const LegalModal = ({ isOpen, onClose, type }) => {
                             <div className="p-3 bg-neon-green/10 rounded-xl border border-neon-green/20">
                                 <Icon className="w-6 h-6 text-neon-green" />
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic">{content.title}</h2>
+                            <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-tighter italic">{content.title}</h2>
                         </div>
                         <button
                             onClick={onClose}
@@ -137,7 +137,7 @@ const LegalModal = ({ isOpen, onClose, type }) => {
                         <div className="space-y-10">
                             {content.sections.map((section, idx) => (
                                 <div key={idx} className="group">
-                                    <h3 className="text-lg font-black uppercase tracking-tight text-white mb-3 group-hover:text-neon-green transition-colors italic">
+                                    <h3 className="text-lg font-bold uppercase tracking-tight text-white mb-3 group-hover:text-neon-green transition-colors italic">
                                         {section.title}
                                     </h3>
                                     <p className="text-gray-400 leading-relaxed text-sm md:text-base">
@@ -148,7 +148,7 @@ const LegalModal = ({ isOpen, onClose, type }) => {
                         </div>
 
                         <div className="mt-12 pt-8 border-t border-white/5">
-                            <p className="text-xs font-black uppercase tracking-[0.3em] text-gray-600 italic">
+                            <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-600 italic">
                                 {content.footer}
                             </p>
                         </div>
@@ -158,7 +158,7 @@ const LegalModal = ({ isOpen, onClose, type }) => {
                     <div className="p-6 bg-black/40 border-t border-white/5 flex justify-end shrink-0">
                         <button
                             onClick={onClose}
-                            className="px-8 py-3 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-neon-green transition-all transform active:scale-95"
+                            className="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest rounded-xl hover:bg-neon-green transition-all transform active:scale-95"
                         >
                             Understood
                         </button>

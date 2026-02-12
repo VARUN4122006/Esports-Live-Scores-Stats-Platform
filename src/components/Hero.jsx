@@ -108,9 +108,9 @@ const Hero = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 0.8 }}
-                        className="text-gray-400 text-xl md:text-3xl mb-12 max-w-3xl mx-auto leading-relaxed font-light"
+                        className="text-gray-400 text-xl md:text-3xl mb-12 max-w-3xl mx-auto leading-relaxed font-normal"
                     >
-                        Real-time analytics and live insights for the <span className="text-white font-medium">elite esports competitor</span>.
+                        Real-time analytics and live insights for the <span className="text-white font-semibold">elite esports competitor</span>.
                         Every frame matters. Every stat counts.
                     </motion.p>
 

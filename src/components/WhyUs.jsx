@@ -37,7 +37,7 @@ const WhyUs = () => {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-black mb-4">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
                         Why <span className="text-neon-blue">EsportsBuzz?</span>
                     </h2>
                     <p className="text-gray-400 max-w-2xl mx-auto">

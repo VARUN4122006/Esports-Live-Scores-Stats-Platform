@@ -97,7 +97,7 @@ const Dashboard = ({ onBack }) => {
                             <ChevronRight className="w-6 h-6 rotate-180 group-hover:-translate-x-1 transition-transform" />
                         </button>
                         <div>
-                            <h1 className="text-4xl font-black uppercase tracking-tighter italic">Command <span className="text-neon-green not-italic">Center</span></h1>
+                            <h1 className="text-4xl font-bold uppercase tracking-tighter italic">Command <span className="text-neon-green not-italic">Center</span></h1>
                             <p className="text-gray-500 text-sm font-bold uppercase tracking-widest">User Dashboard • Access Granted</p>
                         </div>
                     </div>
@@ -111,13 +111,13 @@ const Dashboard = ({ onBack }) => {
                         </div>
                         {/* Instant Dropdown Mock */}
                         <div className="absolute right-0 top-full mt-2 w-72 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all shadow-2xl z-50">
-                            <h4 className="text-xs font-black uppercase tracking-widest mb-4 flex justify-between">
+                            <h4 className="text-xs font-bold uppercase tracking-widest mb-4 flex justify-between">
                                 Notifications <span className="text-neon-green">{notifications.length}</span>
                             </h4>
                             <div className="space-y-3">
                                 {notifications.map(n => (
                                     <div key={n.id} className="text-xs border-b border-white/5 pb-2 last:border-0 hover:bg-white/5 p-1 rounded transition-colors cursor-pointer">
-                                        <p className={`${n.unread ? 'text-white' : 'text-gray-500'} font-medium`}>{n.message}</p>
+                                        <p className={`${n.unread ? 'text-white' : 'text-gray-500'} font-semibold`}>{n.message}</p>
                                         <p className="text-[10px] text-gray-600 mt-1 uppercase font-bold">{n.time}</p>
                                     </div>
                                 ))}
@@ -135,7 +135,7 @@ const Dashboard = ({ onBack }) => {
                                 onClick={() => setActiveTab(item.id)}
                                 whileHover={{ scale: 1.02, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
                                 whileTap={{ scale: 0.98 }}
-                                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black uppercase text-sm tracking-widest transition-all group relative overflow-hidden ${activeTab === item.id ? 'bg-neon-green text-black shadow-[0_0_30px_rgba(57,255,20,0.2)]' : 'text-gray-500 hover:text-white'}`}
+                                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase text-sm tracking-widest transition-all group relative overflow-hidden ${activeTab === item.id ? 'bg-neon-green text-black shadow-[0_0_30px_rgba(57,255,20,0.2)]' : 'text-gray-500 hover:text-white'}`}
                             >
                                 <item.icon className={`w-5 h-5 ${activeTab === item.id ? 'text-black' : 'group-hover:text-neon-green'} transition-colors duration-200`} />
                                 {item.label}
@@ -190,13 +190,13 @@ const Dashboard = ({ onBack }) => {
                                                     type="text"
                                                     value={user.name}
                                                     onChange={(e) => setUser({ ...user, name: e.target.value })}
-                                                    className="text-5xl font-black uppercase tracking-tighter mb-2 italic bg-white/10 border border-white/20 rounded-xl px-4 py-2 w-full text-white focus:outline-none focus:border-neon-green"
+                                                    className="text-5xl font-bold uppercase tracking-tighter mb-2 italic bg-white/10 border border-white/20 rounded-xl px-4 py-2 w-full text-white focus:outline-none focus:border-neon-green"
                                                     autoFocus
                                                 />
                                             ) : (
-                                                <h2 className="text-5xl font-black uppercase tracking-tighter mb-2 italic">{user.name}</h2>
+                                                <h2 className="text-5xl font-bold uppercase tracking-tighter mb-2 italic">{user.name}</h2>
                                             )}
-                                            <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-black uppercase tracking-widest text-gray-500">
+                                            <div className="flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">
                                                 <span className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10"><ShieldCheck className="w-3 h-3 text-neon-green" /> {user.rank}</span>
                                                 <span className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10"><Trophy className="w-3 h-3 text-yellow-500" /> {user.points} Points</span>
                                                 <span className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 italic">{user.email}</span>
@@ -204,7 +204,7 @@ const Dashboard = ({ onBack }) => {
                                         </div>
                                         <button
                                             onClick={isEditing ? handleSaveProfile : () => setIsEditing(true)}
-                                            className={`px-8 py-3 font-black uppercase tracking-widest rounded-xl transition-[background-color,color,transform] duration-200 shadow-xl active:scale-95 ${isEditing ? 'bg-neon-green text-black hover:bg-white' : 'bg-white text-black hover:bg-neon-green'}`}
+                                            className={`px-8 py-3 font-bold uppercase tracking-widest rounded-xl transition-[background-color,color,transform] duration-200 shadow-xl active:scale-95 ${isEditing ? 'bg-neon-green text-black hover:bg-white' : 'bg-white text-black hover:bg-neon-green'}`}
                                         >
                                             {isEditing ? 'Save Changes' : 'Edit Profile'}
                                         </button>
@@ -226,8 +226,8 @@ const Dashboard = ({ onBack }) => {
                                                     <stat.icon className="w-6 h-6" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">{stat.label}</p>
-                                                    <p className="text-3xl font-black italic tracking-tighter">{stat.value}</p>
+                                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-1">{stat.label}</p>
+                                                    <p className="text-3xl font-bold italic tracking-tighter">{stat.value}</p>
                                                 </div>
                                             </motion.div>
                                         ))}
@@ -235,13 +235,13 @@ const Dashboard = ({ onBack }) => {
 
                                     <div className="p-8 bg-neon-green/5 border border-neon-green/20 rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6">
                                         <div className="flex items-center gap-6">
-                                            <div className="w-16 h-16 bg-neon-green text-black rounded-2xl flex items-center justify-center font-black text-2xl shadow-lg">?</div>
+                                            <div className="w-16 h-16 bg-neon-green text-black rounded-2xl flex items-center justify-center font-bold text-2xl shadow-lg">?</div>
                                             <div>
-                                                <h4 className="text-xl font-black uppercase italic">Complete Your Daily Mission</h4>
-                                                <p className="text-gray-400 text-sm font-medium">Watch a live match for 10 minutes to earn 200 XP.</p>
+                                                <h4 className="text-xl font-bold uppercase italic">Complete Your Daily Mission</h4>
+                                                <p className="text-gray-400 text-sm font-semibold">Watch a live match for 10 minutes to earn 200 XP.</p>
                                             </div>
                                         </div>
-                                        <button className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-black uppercase tracking-widest rounded-xl transition-all border border-white/10">Explore Matches</button>
+                                        <button className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white font-bold uppercase tracking-widest rounded-xl transition-all border border-white/10">Explore Matches</button>
                                     </div>
                                 </motion.div>
                             )}
@@ -255,8 +255,8 @@ const Dashboard = ({ onBack }) => {
                                     className="space-y-8"
                                 >
                                     <div>
-                                        <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-2">Favorite <span className="text-neon-green">Games</span></h2>
-                                        <p className="text-gray-500 uppercase font-black text-[10px] tracking-widest leading-none">Customize your dashboard experience by selecting titles you follow.</p>
+                                        <h2 className="text-3xl font-bold uppercase tracking-tighter italic mb-2">Favorite <span className="text-neon-green">Games</span></h2>
+                                        <p className="text-gray-500 uppercase font-bold text-[10px] tracking-widest leading-none">Customize your dashboard experience by selecting titles you follow.</p>
                                     </div>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                                         {[
@@ -277,7 +277,7 @@ const Dashboard = ({ onBack }) => {
                                                         loading="lazy"
                                                     />
                                                 </div>
-                                                <h3 className={`font-black uppercase text-sm tracking-widest leading-none transition-colors duration-200 ${favGames.includes(game) ? 'text-white' : 'text-gray-500'}`}>{game}</h3>
+                                                <h3 className={`font-bold uppercase text-sm tracking-widest leading-none transition-colors duration-200 ${favGames.includes(game) ? 'text-white' : 'text-gray-500'}`}>{game}</h3>
                                                 {favGames.includes(game) && (
                                                     <motion.div
                                                         initial={{ scale: 0, opacity: 0 }}
@@ -303,10 +303,10 @@ const Dashboard = ({ onBack }) => {
                                 >
                                     <div className="flex flex-col md:flex-row justify-between items-end gap-6">
                                         <div>
-                                            <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-2">My <span className="text-neon-green">Following</span></h2>
+                                            <h2 className="text-3xl font-bold uppercase tracking-tighter italic mb-2">My <span className="text-neon-green">Following</span></h2>
                                             <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 mt-4">
-                                                <button onClick={() => setFollowTab('teams')} className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${followTab === 'teams' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>Teams</button>
-                                                <button onClick={() => setFollowTab('players')} className={`px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${followTab === 'players' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>Players</button>
+                                                <button onClick={() => setFollowTab('teams')} className={`px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${followTab === 'teams' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>Teams</button>
+                                                <button onClick={() => setFollowTab('players')} className={`px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${followTab === 'players' ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-white'}`}>Players</button>
                                             </div>
                                         </div>
                                     </div>
@@ -316,9 +316,9 @@ const Dashboard = ({ onBack }) => {
                                             followedTeams.length > 0 ? followedTeams.map(team => (
                                                 <div key={team.id} className="bg-black/40 border border-white/5 p-6 rounded-3xl flex items-center justify-between group hover:border-white/20 transition-all shadow-lg">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center font-black italic text-2xl shadow-inner border border-white/5" style={{ color: team.color }}>{team.logo}</div>
+                                                        <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center font-bold italic text-2xl shadow-inner border border-white/5" style={{ color: team.color }}>{team.logo}</div>
                                                         <div>
-                                                            <h4 className="text-xl font-black uppercase italic leading-none">{team.name}</h4>
+                                                            <h4 className="text-xl font-bold uppercase italic leading-none">{team.name}</h4>
                                                             <p className="text-[10px] text-gray-500 font-bold uppercase mt-2 tracking-widest">{team.game}</p>
                                                         </div>
                                                     </div>
@@ -333,7 +333,7 @@ const Dashboard = ({ onBack }) => {
                                                     <div className="flex items-center gap-4">
                                                         <img src={player.img} alt={player.name} className="w-16 h-16 rounded-2xl bg-white/5 object-cover shadow-inner border border-white/5" />
                                                         <div>
-                                                            <h4 className="text-xl font-black uppercase italic leading-none">{player.name}</h4>
+                                                            <h4 className="text-xl font-bold uppercase italic leading-none">{player.name}</h4>
                                                             <p className="text-[10px] text-gray-500 font-bold uppercase mt-2 tracking-widest">{player.team} • {player.game}</p>
                                                         </div>
                                                     </div>
@@ -357,8 +357,8 @@ const Dashboard = ({ onBack }) => {
                                 >
                                     <div className="flex justify-between items-end">
                                         <div>
-                                            <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-2">Watch <span className="text-neon-green">History</span></h2>
-                                            <p className="text-gray-500 uppercase font-black text-[10px] tracking-widest leading-none">Recently viewed matches and results.</p>
+                                            <h2 className="text-3xl font-bold uppercase tracking-tighter italic mb-2">Watch <span className="text-neon-green">History</span></h2>
+                                            <p className="text-gray-500 uppercase font-bold text-[10px] tracking-widest leading-none">Recently viewed matches and results.</p>
                                         </div>
                                     </div>
 
@@ -366,24 +366,24 @@ const Dashboard = ({ onBack }) => {
                                         {dashboardData.matchHistory.map(match => (
                                             <div key={match.id} className="bg-black/40 border border-white/5 p-6 rounded-3xl hover:border-white/20 transition-all group flex flex-col md:flex-row items-center gap-8 cursor-pointer shadow-lg active:scale-[0.99]">
                                                 <div className="flex items-center gap-4 text-center md:text-left shrink-0">
-                                                    <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center font-black italic shadow-inner border border-white/10 group-hover:bg-neon-green/10 transition-colors group-hover:text-neon-green">
+                                                    <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center font-bold italic shadow-inner border border-white/10 group-hover:bg-neon-green/10 transition-colors group-hover:text-neon-green">
                                                         {match.game[0]}
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-lg font-black uppercase italic leading-none">{match.game}</h4>
+                                                        <h4 className="text-lg font-bold uppercase italic leading-none">{match.game}</h4>
                                                         <p className="text-[10px] text-gray-600 font-bold uppercase mt-1 tracking-widest">{match.status}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex-1 text-center md:text-left">
-                                                    <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1 leading-none">{match.title}</p>
+                                                    <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1 leading-none">{match.title}</p>
                                                     <div className="flex items-center justify-center md:justify-start gap-4">
-                                                        <span className="font-black uppercase text-xl md:text-2xl tracking-tighter italic whitespace-nowrap">{match.teams[0]}</span>
-                                                        <span className="bg-white/10 px-3 py-1 rounded-lg font-black text-xs text-neon-green shadow-inner border border-white/5">{match.result}</span>
-                                                        <span className="font-black uppercase text-xl md:text-2xl tracking-tighter italic whitespace-nowrap">{match.teams[1]}</span>
+                                                        <span className="font-bold uppercase text-xl md:text-2xl tracking-tighter italic whitespace-nowrap">{match.teams[0]}</span>
+                                                        <span className="bg-white/10 px-3 py-1 rounded-lg font-bold text-xs text-neon-green shadow-inner border border-white/5">{match.result}</span>
+                                                        <span className="font-bold uppercase text-xl md:text-2xl tracking-tighter italic whitespace-nowrap">{match.teams[1]}</span>
                                                     </div>
                                                 </div>
                                                 <div className="text-center md:text-right shrink-0">
-                                                    <p className="text-md font-black italic">{match.date}</p>
+                                                    <p className="text-md font-bold italic">{match.date}</p>
                                                     <p className="text-[10px] text-gray-600 uppercase font-bold tracking-widest leading-none mt-1">{match.time}</p>
                                                 </div>
                                             </div>
@@ -401,8 +401,8 @@ const Dashboard = ({ onBack }) => {
                                     className="space-y-12"
                                 >
                                     <div>
-                                        <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-2">Notification <span className="text-neon-green">Alerts</span></h2>
-                                        <p className="text-gray-500 uppercase font-black text-[10px] tracking-widest leading-none">Control the data flow and how you receive tactical updates.</p>
+                                        <h2 className="text-3xl font-bold uppercase tracking-tighter italic mb-2">Notification <span className="text-neon-green">Alerts</span></h2>
+                                        <p className="text-gray-500 uppercase font-bold text-[10px] tracking-widest leading-none">Control the data flow and how you receive tactical updates.</p>
                                     </div>
 
                                     <div className="space-y-6">
@@ -417,8 +417,8 @@ const Dashboard = ({ onBack }) => {
                                                         <setting.icon className="w-6 h-6" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-lg font-black uppercase italic leading-none mb-1">{setting.label}</h4>
-                                                        <p className="text-sm text-gray-500 font-medium">{setting.desc}</p>
+                                                        <h4 className="text-lg font-bold uppercase italic leading-none mb-1">{setting.label}</h4>
+                                                        <p className="text-sm text-gray-500 font-semibold">{setting.desc}</p>
                                                     </div>
                                                 </div>
                                                 <button
@@ -436,7 +436,7 @@ const Dashboard = ({ onBack }) => {
                                     </div>
 
                                     <div className="pt-8 border-t border-white/5">
-                                        <button className="flex items-center gap-3 text-red-500 hover:text-red-400 font-black uppercase tracking-widest text-xs transition-colors group">
+                                        <button className="flex items-center gap-3 text-red-500 hover:text-red-400 font-bold uppercase tracking-widest text-xs transition-colors group">
                                             <BellOff className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                             Disable All Notifications
                                         </button>
@@ -447,7 +447,7 @@ const Dashboard = ({ onBack }) => {
 
                         {/* Background Section Accent */}
                         <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none select-none">
-                            <span className="text-[120px] font-black uppercase tracking-tighter leading-none italic">{activeTab}</span>
+                            <span className="text-[120px] font-bold uppercase tracking-tighter leading-none italic">{activeTab}</span>
                         </div>
                     </main>
                 </div>
@@ -462,10 +462,10 @@ const EmptyState = ({ message, icon: Icon }) => (
             <Icon className="w-10 h-10 text-neon-green opacity-60" />
         </div>
         <div>
-            <p className="text-gray-300 font-black uppercase tracking-widest text-xs mb-1">{message}</p>
+            <p className="text-gray-300 font-bold uppercase tracking-widest text-xs mb-1">{message}</p>
             <p className="text-gray-600 font-bold uppercase text-[10px] tracking-widest">Explore matches and tournaments to start following</p>
         </div>
-        <button className="px-6 py-2 bg-neon-green/10 border border-neon-green/20 text-neon-green text-xs font-black uppercase tracking-widest rounded-xl hover:bg-neon-green/20 transition-all">Browse Directory</button>
+        <button className="px-6 py-2 bg-neon-green/10 border border-neon-green/20 text-neon-green text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-neon-green/20 transition-all">Browse Directory</button>
     </div>
 );
 

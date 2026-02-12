@@ -74,7 +74,7 @@ const Navbar = ({ onSignInClick, user, onLogout }) => {
                             key={link.name}
                             href={link.href}
                             onClick={(e) => handleNavClick(e, link.href)}
-                            className="text-gray-300 hover:text-neon-blue transition-all duration-300 text-sm font-medium uppercase tracking-widest hover:tracking-[0.15em] relative py-1"
+                            className="text-gray-300 hover:text-neon-blue transition-all duration-300 text-sm font-semibold uppercase tracking-widest hover:tracking-[0.15em] relative py-1"
                         >
                             {link.name}
                         </a>

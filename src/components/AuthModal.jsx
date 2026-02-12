@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, User, LogIn, Mail, Eye, EyeOff } from 'lucide-react';
 
 const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
-    const [activeTab, setActiveTab] = useState('existing'); // 'new' or 'existing'
+    const [activeTab, setActiveTab] = useState('existing'); // 'new', 'existing', or 'recovery'
     const [signupStep, setSignupStep] = useState(1); // 1: Email, 2: OTP
+    const [recoveryStep, setRecoveryStep] = useState(1); // 1: Email, 2: Success
     const [formData, setFormData] = useState({ username: '', password: '', email: '', otp: '', fullName: '', confirmPassword: '' });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +24,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
     // Reset steps when tab changes
     useEffect(() => {
         setSignupStep(1);
+        setRecoveryStep(1);
         setError('');
     }, [activeTab]);
 
@@ -118,6 +120,30 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
         }, 1500);
     };
 
+    const handlePasswordRecovery = (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (!formData.email) {
+            setError('Please enter your email address.');
+            return;
+        }
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|.*\.edu\.in)$/;
+        if (!emailRegex.test(formData.email)) {
+            setError('Please enter a valid Gmail (@gmail.com) or educational (@...edu.in) address.');
+            return;
+        }
+
+        setIsLoading(true);
+        // Mock recovery link sending
+        setTimeout(() => {
+            setIsLoading(false);
+            setRecoveryStep(2);
+            console.log('Recovery link sent to:', formData.email);
+        }, 1500);
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -154,9 +180,11 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
                         <div className="text-center mb-8">
                             <h2 className="text-3xl font-black tracking-tighter text-white mb-2 uppercase">
-                                {activeTab === 'new' ? 'Create Account' : 'Welcome Back'}
+                                {activeTab === 'new' ? 'Create Account' : activeTab === 'existing' ? 'Welcome Back' : 'Recover Access'}
                             </h2>
-                            <p className="text-gray-400 text-sm">Join the elite arena of esports analytics.</p>
+                            <p className="text-gray-400 text-sm">
+                                {activeTab === 'recovery' ? 'Enter your details to reset password.' : 'Join the elite arena of esports analytics.'}
+                            </p>
                         </div>
 
                         {/* Tab Switcher */}
@@ -169,7 +197,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                         }`}
                                 >
                                     {tab === 'new' ? 'New User' : 'Existing User'}
-                                    {activeTab === tab && (
+                                    {['new', 'existing'].includes(activeTab) && activeTab === tab && (
                                         <motion.div
                                             layoutId="activeTabGlow"
                                             className="absolute inset-0 bg-white/10 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]"
@@ -291,7 +319,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                                 disabled={isLoading}
                                                 whileHover={{ scale: 1.02, backgroundColor: 'var(--color-neon-blue)', color: 'black' }}
                                                 whileTap={{ scale: 0.98 }}
-                                                className="w-full py-4 bg-white text-black font-black uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
+                                                className="w-full py-4 bg-white text-black font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
                                             >
                                                 {isLoading ? 'Sending OTP...' : 'Send OTP to Gmail'}
                                             </motion.button>
@@ -326,7 +354,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                                 disabled={isLoading}
                                                 whileHover={{ scale: 1.02, backgroundColor: 'white', color: 'black' }}
                                                 whileTap={{ scale: 0.98 }}
-                                                className="w-full py-4 bg-neon-purple text-white font-black uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
+                                                className="w-full py-4 bg-neon-purple text-white font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
                                             >
                                                 {isLoading ? 'Verifying...' : 'Verify Access'}
                                             </motion.button>
@@ -344,7 +372,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                         By signing up, you agree to our Terms of Service and Privacy Policy.
                                     </p>
                                 </motion.div>
-                            ) : (
+                            ) : activeTab === 'existing' ? (
                                 <motion.div
                                     key="existing"
                                     initial={{ opacity: 0, x: 10 }}
@@ -366,7 +394,16 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
+                                            <div className="flex justify-between items-center ml-1">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Password</label>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setActiveTab('recovery')}
+                                                    className="text-[10px] font-bold uppercase tracking-widest text-neon-blue hover:text-white transition-colors"
+                                                >
+                                                    Forgot Password?
+                                                </button>
+                                            </div>
                                             <div className="relative">
                                                 <LogIn className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                                 <input
@@ -401,11 +438,88 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                             disabled={isLoading}
                                             whileHover={{ scale: 1.02, opacity: 0.9 }}
                                             whileTap={{ scale: 0.98 }}
-                                            className="w-full py-4 bg-neon-purple text-white font-black uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl mt-4"
+                                            className="w-full py-4 bg-neon-purple text-white font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl mt-4"
                                         >
                                             {isLoading ? 'Authenticating...' : 'Login to Arena'}
                                         </motion.button>
                                     </form>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="recovery"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    className="space-y-6"
+                                >
+                                    {recoveryStep === 1 ? (
+                                        <form onSubmit={handlePasswordRecovery} className="space-y-4">
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Email Address</label>
+                                                <div className="relative">
+                                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                                                    <input
+                                                        type="email"
+                                                        value={formData.email}
+                                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                        className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-neon-blue transition-colors"
+                                                        placeholder="username@gmail.com"
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {error && (
+                                                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 text-xs font-bold ml-1">
+                                                    {error}
+                                                </motion.p>
+                                            )}
+
+                                            <motion.button
+                                                type="submit"
+                                                disabled={isLoading}
+                                                whileHover={{ scale: 1.02, backgroundColor: 'var(--color-neon-blue)', color: 'black' }}
+                                                whileTap={{ scale: 0.98 }}
+                                                className="w-full py-4 bg-white text-black font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
+                                            >
+                                                {isLoading ? 'Sending...' : 'Send Recovery Link'}
+                                            </motion.button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => setActiveTab('existing')}
+                                                className="w-full text-xs text-gray-500 hover:text-white transition-colors uppercase font-bold tracking-widest text-center"
+                                            >
+                                                Back to Login
+                                            </button>
+                                        </form>
+                                    ) : (
+                                        <div className="text-center py-8 space-y-6">
+                                            <div className="w-20 h-20 bg-neon-green/10 rounded-full flex items-center justify-center mx-auto">
+                                                <motion.div
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: 1 }}
+                                                    transition={{ type: "spring", damping: 12 }}
+                                                >
+                                                    <Mail className="w-10 h-10 text-neon-green" />
+                                                </motion.div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h3 className="text-xl font-bold text-white">Check Your Mail</h3>
+                                                <p className="text-gray-400 text-sm px-4">
+                                                    We've sent a recovery link to <span className="text-neon-blue font-bold">{formData.email}</span>. Please check your inbox.
+                                                </p>
+                                            </div>
+                                            <motion.button
+                                                onClick={() => setActiveTab('existing')}
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className="text-xs font-bold uppercase tracking-widest text-neon-green bg-neon-green/10 py-2 px-6 rounded-lg hover:bg-neon-green/20 transition-all"
+                                            >
+                                                Return to Login
+                                            </motion.button>
+                                        </div>
+                                    )}
                                 </motion.div>
                             )}
                         </AnimatePresence>
