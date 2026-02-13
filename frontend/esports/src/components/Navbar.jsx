@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Menu, X, Zap, LogOut, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Navbar = ({ onSignInClick, user, onLogout }) => {
+const Navbar = ({ onSignInClick, user, onLogout, showNavLinks = true }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -59,7 +59,7 @@ const Navbar = ({ onSignInClick, user, onLogout }) => {
                     onClick={(e) => handleNavClick(e, '/')}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center gap-2 text-2xl font-bold tracking-tighter text-white cursor-pointer group"
+                    className="flex items-center gap-2 text-2xl font-heading font-bold tracking-tighter text-white cursor-pointer group"
                 >
                     <Zap className="w-8 h-8 text-neon-green group-hover:rotate-12 transition-transform" />
                     <span className="bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
@@ -69,12 +69,12 @@ const Navbar = ({ onSignInClick, user, onLogout }) => {
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-8">
-                    {navLinks.map((link) => (
+                    {showNavLinks && navLinks.map((link) => (
                         <a
                             key={link.name}
                             href={link.href}
                             onClick={(e) => handleNavClick(e, link.href)}
-                            className="text-gray-300 hover:text-neon-blue transition-all duration-300 text-sm font-semibold uppercase tracking-widest hover:tracking-[0.15em] relative py-1"
+                            className="text-gray-300 hover:text-neon-blue transition-all duration-300 text-sm font-body font-semibold uppercase tracking-widest hover:tracking-[0.15em] relative py-1"
                         >
                             {link.name}
                         </a>
@@ -93,7 +93,7 @@ const Navbar = ({ onSignInClick, user, onLogout }) => {
                                             <img src={user.avatar} alt={user.username} className="w-10 h-10 rounded-full border-2 border-neon-purple object-cover group-hover:border-white transition-colors" />
                                         ) : (
                                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neon-purple to-neon-blue flex items-center justify-center text-white font-bold border-2 border-white/20 text-sm shadow-[0_0_15px_rgba(139,92,246,0.3)] group-hover:shadow-neon-purple/50 transition-all">
-                                                {user.username ? user.username.substring(0, 2).toUpperCase() : 'GP'}
+                                                {user.username ? user.username.substring(0, 1).toUpperCase() : 'G'}
                                             </div>
                                         )}
                                         <div className="absolute bottom-0 right-0 w-3 h-3 bg-neon-green rounded-full border-2 border-black shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
@@ -144,7 +144,7 @@ const Navbar = ({ onSignInClick, user, onLogout }) => {
                         ) : (
                             <button
                                 onClick={handleSignInClick}
-                                className="relative z-[60] px-6 py-2 bg-neon-purple/20 border border-neon-purple text-neon-purple hover:bg-neon-purple hover:text-white transition-all rounded-full font-bold uppercase text-xs tracking-wider cursor-pointer"
+                                className="relative z-[60] px-6 py-2 bg-neon-purple/20 border border-neon-purple text-neon-purple hover:bg-neon-purple hover:text-white transition-all rounded-full font-button font-bold uppercase text-xs tracking-widest cursor-pointer"
                             >
                                 Sign In
                             </button>
@@ -171,7 +171,7 @@ const Navbar = ({ onSignInClick, user, onLogout }) => {
                         exit={{ opacity: 0, y: -20 }}
                         className="absolute top-full left-0 w-full bg-esports-card border-b border-gray-800 md:hidden flex flex-col items-center py-8 gap-6 shadow-2xl"
                     >
-                        {navLinks.map((link) => (
+                        {showNavLinks && navLinks.map((link) => (
                             <a
                                 key={link.name}
                                 href={link.href}

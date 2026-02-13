@@ -17,6 +17,7 @@ import ValorantPage from './components/ValorantPage';
 import CS2Page from './components/CS2Page';
 import Dota2Page from './components/Dota2Page';
 import LoLPage from './components/LoLPage';
+import LoaderThree from './components/ui/loader';
 
 const LandingPage = ({ onGameSelect }) => (
   <motion.div
@@ -39,6 +40,7 @@ function App() {
   const [legalModal, setLegalModal] = useState(null); // 'terms' | 'privacy' | null
   const [path, setPath] = useState(window.location.pathname);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Initialize user from localStorage
   useEffect(() => {
@@ -67,18 +69,43 @@ function App() {
   }, []);
 
   const navigate = (newPath) => {
-    window.history.pushState({}, '', newPath);
-    setPath(newPath);
-    window.scrollTo(0, 0);
+    setLoading(true);
+    const [purePath] = newPath.split('#');
+
+    // Artificial delay for premium loading feel
+    setTimeout(() => {
+      window.history.pushState({}, '', newPath);
+      setPath(purePath);
+      setLoading(false);
+    }, 500);
   };
+
+  // Handle anchor scrolling after routing/mounting
+  useEffect(() => {
+    if (window.location.hash) {
+      const hash = window.location.hash.slice(1);
+      const timer = setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500); // Delay to account for AnimatePresence mode="wait" transitions
+      return () => clearTimeout(timer);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [path]);
 
   return (
     <FollowedTeamsProvider>
       <div className="min-h-screen bg-esports-dark text-white selection:bg-neon-green selection:text-black font-sans">
+        <LoaderThree isLoading={loading} />
+
         <Navbar
           onSignInClick={() => setIsAuthModalOpen(true)}
           user={user}
           onLogout={handleLogout}
+          showNavLinks={path === '/'}
         />
 
         <main className="relative">
@@ -101,7 +128,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <FreeFirePage onBack={() => navigate('/')} />
+                <FreeFirePage onBack={() => navigate('/#games')} />
               </motion.div>
             )}
 
@@ -113,7 +140,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <BGMIPage onBack={() => navigate('/')} />
+                <BGMIPage onBack={() => navigate('/#games')} />
               </motion.div>
             )}
 
@@ -125,7 +152,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <ValorantPage onBack={() => navigate('/')} />
+                <ValorantPage onBack={() => navigate('/#games')} />
               </motion.div>
             )}
 
@@ -137,7 +164,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <CS2Page onBack={() => navigate('/')} />
+                <CS2Page onBack={() => navigate('/#games')} />
               </motion.div>
             )}
 
@@ -149,7 +176,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Dota2Page onBack={() => navigate('/')} />
+                <Dota2Page onBack={() => navigate('/#games')} />
               </motion.div>
             )}
 
@@ -161,7 +188,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Dashboard onBack={() => navigate('/')} />
+                <Dashboard onBack={() => navigate('/#games')} />
               </motion.div>
             )}
 
@@ -173,7 +200,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <LoLPage onBack={() => navigate('/')} />
+                <LoLPage onBack={() => navigate('/#games')} />
               </motion.div>
             )}
 
@@ -194,7 +221,7 @@ function App() {
                     The dedicated hub for <span className="text-white">{path.split('/').pop().toUpperCase()}</span> is currently being forged.
                   </p>
                   <button
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate('/#games')}
                     className="px-10 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-neon-green transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)] active:scale-95"
                   >
                     Return to Base

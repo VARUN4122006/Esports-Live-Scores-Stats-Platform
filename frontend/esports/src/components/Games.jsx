@@ -22,8 +22,8 @@ const Games = ({ onGameSelect }) => {
                     className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
                 >
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-black mb-2 tracking-tight">Supported <span className="text-neon-green">Games</span></h2>
-                        <p className="text-gray-400"> comprehensive analytics for the biggest titles.</p>
+                        <h2 className="text-4xl md:text-5xl font-heading font-black mb-2 tracking-tight uppercase">Supported <span className="text-neon-green">Games</span></h2>
+                        <p className="text-gray-400 font-body"> comprehensive analytics for the biggest titles.</p>
                     </div>
                 </motion.div>
 
@@ -38,7 +38,17 @@ const Games = ({ onGameSelect }) => {
                             whileHover={{ scale: 1.05, y: -5 }}
                             whileTap={{ scale: 0.95 }}
                             onTap={() => onGameSelect?.(game.name)}
+                            onClick={() => onGameSelect?.(game.name)}
                             className="relative group cursor-pointer z-20"
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`View stats for ${game.name}`}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    onGameSelect?.(game.name);
+                                }
+                            }}
                         >
                             {/* Inner Glow/Ring */}
                             <div className="absolute -inset-1 bg-gradient-to-r from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity" />
@@ -62,7 +72,7 @@ const Games = ({ onGameSelect }) => {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                                 <div className="absolute bottom-0 left-0 w-full p-4">
-                                    <h3 className="text-white font-medium text-center group-hover:text-neon-green transition-colors font-outfit">{game.name}</h3>
+                                    <h3 className="text-white font-heading font-bold text-sm text-center group-hover:text-neon-green transition-colors uppercase tracking-wider">{game.name}</h3>
                                 </div>
                             </div>
                         </motion.div>

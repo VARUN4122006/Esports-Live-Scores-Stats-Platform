@@ -122,7 +122,7 @@ const LegalModal = ({ isOpen, onClose, type }) => {
                             <div className="p-3 bg-neon-green/10 rounded-xl border border-neon-green/20">
                                 <Icon className="w-6 h-6 text-neon-green" />
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-tighter italic">{content.title}</h2>
+                            <h2 className="text-2xl md:text-3xl font-heading font-black uppercase tracking-tighter italic">{content.title}</h2>
                         </div>
                         <button
                             onClick={onClose}
@@ -137,10 +137,10 @@ const LegalModal = ({ isOpen, onClose, type }) => {
                         <div className="space-y-10">
                             {content.sections.map((section, idx) => (
                                 <div key={idx} className="group">
-                                    <h3 className="text-lg font-bold uppercase tracking-tight text-white mb-3 group-hover:text-neon-green transition-colors italic">
+                                    <h3 className="text-lg font-heading font-bold uppercase tracking-tight text-white mb-3 group-hover:text-neon-green transition-colors italic">
                                         {section.title}
                                     </h3>
-                                    <p className="text-gray-400 leading-relaxed text-sm md:text-base">
+                                    <p className="text-gray-400 leading-relaxed text-sm md:text-base font-body">
                                         {section.text}
                                     </p>
                                 </div>

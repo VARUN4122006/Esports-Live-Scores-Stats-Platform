@@ -80,12 +80,12 @@ const Hero = () => {
                         className="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-xl mb-8"
                     >
                         <span className="flex h-2 w-2 rounded-full bg-neon-green animate-pulse"></span>
-                        <span className="text-gray-300 text-xs font-bold tracking-[0.2em] uppercase">
+                        <span className="text-gray-300 text-[10px] font-body font-bold tracking-[0.3em] uppercase">
                             Experience the Evolution
                         </span>
                     </motion.div>
 
-                    <h1 className="text-6xl md:text-8xl lg:text-9xl font-black mb-8 leading-[0.9] tracking-tighter">
+                    <h1 className="text-6xl md:text-8xl lg:text-9xl font-heading font-black mb-8 leading-[0.9] tracking-wide uppercase">
                         <motion.span
                             initial={{ opacity: 0, x: -50 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -108,7 +108,7 @@ const Hero = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 0.8 }}
-                        className="text-gray-400 text-xl md:text-3xl mb-12 max-w-3xl mx-auto leading-relaxed font-normal"
+                        className="text-gray-400 text-lg md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-body font-normal"
                     >
                         Real-time analytics and live insights for the <span className="text-white font-semibold">elite esports competitor</span>.
                         Every frame matters. Every stat counts.

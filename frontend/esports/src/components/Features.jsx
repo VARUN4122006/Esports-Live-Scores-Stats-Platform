@@ -36,11 +36,11 @@ const Features = () => {
                         viewport={{ once: true }}
                         className="space-y-8"
                     >
-                        <h2 className="text-4xl font-bold leading-tight">
+                        <h2 className="text-4xl font-heading font-black leading-tight uppercase tracking-tight">
                             Powerful <span className="text-neon-blue">Features</span><br />
                             For The Serious Fan
                         </h2>
-                        <p className="text-gray-400 text-lg">
+                        <p className="text-gray-400 text-lg font-body">
                             Everything you need to follow the professional scene, all in one place.
                         </p>
 
@@ -58,8 +58,8 @@ const Features = () => {
                                         {item.icon}
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                                        <p className="text-gray-400">{item.description}</p>
+                                        <h3 className="text-xl font-heading font-bold text-white mb-2 uppercase tracking-tight">{item.title}</h3>
+                                        <p className="text-gray-400 font-body">{item.description}</p>
                                     </div>
                                 </motion.div>
                             ))}

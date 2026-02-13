@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Inter:wght@400..700&family=Space+Grotesk:wght@400..700&family=Rajdhani:wght@400..700&family=Outfit:wght@100..900&display=swap');
 
 @theme {
   --color-esports-dark: #0a0a0a;
@@ -8,6 +8,10 @@
   --color-neon-green: #00ff88;
   --color-neon-purple: #bc13fe;
 
+  --font-heading: 'Orbitron', 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-dashboard: 'Space Grotesk', sans-serif;
+  --font-button: 'Rajdhani', sans-serif;
   --font-sans: 'Inter', sans-serif;
   --font-outfit: 'Outfit', sans-serif;
 }

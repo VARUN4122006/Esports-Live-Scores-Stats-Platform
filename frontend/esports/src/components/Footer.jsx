@@ -6,11 +6,11 @@ const Footer = ({ onLegalClick }) => {
             <div className="container mx-auto px-6">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-16">
                     <div className="mb-8 md:mb-0 text-center md:text-left">
-                        <div className="flex items-center justify-center md:justify-start gap-2 text-2xl font-bold tracking-tighter text-white mb-4">
+                        <div className="flex items-center justify-center md:justify-start gap-2 text-2xl font-heading font-bold tracking-tighter text-white mb-4">
                             <Zap className="w-8 h-8 text-neon-green" />
                             <span>EsportsBuzz</span>
                         </div>
-                        <p className="text-gray-500 max-w-sm">
+                        <p className="text-gray-500 max-w-sm font-body">
                             The ultimate platform for real-time esports analytics and live scores.
                         </p>
                     </div>
@@ -61,13 +61,13 @@ const Footer = ({ onLegalClick }) => {
                     <div className="flex gap-8 mt-4 md:mt-0">
                         <button
                             onClick={() => onLegalClick?.('privacy')}
-                            className="hover:text-neon-green transition-colors cursor-pointer"
+                            className="hover:text-neon-green transition-colors cursor-pointer font-button font-black uppercase tracking-widest text-[10px]"
                         >
                             Privacy Policy
                         </button>
                         <button
                             onClick={() => onLegalClick?.('terms')}
-                            className="hover:text-neon-green transition-colors cursor-pointer"
+                            className="hover:text-neon-green transition-colors cursor-pointer font-button font-black uppercase tracking-widest text-[10px]"
                         >
                             Terms & Services
                         </button>

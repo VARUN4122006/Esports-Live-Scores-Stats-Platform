@@ -37,10 +37,10 @@ const WhyUs = () => {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                    <h2 className="text-4xl md:text-5xl font-heading font-black mb-4 uppercase tracking-tight">
                         Why <span className="text-neon-blue">EsportsBuzz?</span>
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-gray-400 max-w-2xl mx-auto font-body">
                         Built for the competitive gamer who demands speed, accuracy, and depth.
                     </p>
                 </motion.div>
@@ -59,10 +59,10 @@ const WhyUs = () => {
                             <div className="mb-6 p-4 bg-gray-900/50 rounded-full inline-block group-hover:bg-gray-800 transition-colors">
                                 {feature.icon}
                             </div>
-                            <h3 className="text-xl font-bold mb-3 text-white group-hover:text-neon-blue transition-colors">
+                            <h3 className="text-xl font-heading font-bold mb-3 text-white group-hover:text-neon-blue transition-colors uppercase tracking-tight">
                                 {feature.title}
                             </h3>
-                            <p className="text-gray-400 text-sm leading-relaxed">
+                            <p className="text-gray-400 text-sm leading-relaxed font-body">
                                 {feature.description}
                             </p>
                         </motion.div>

@@ -179,10 +179,10 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                         </motion.button>
 
                         <div className="text-center mb-8">
-                            <h2 className="text-3xl font-black tracking-tighter text-white mb-2 uppercase">
+                            <h2 className="text-3xl font-heading font-black tracking-tighter text-white mb-2 uppercase">
                                 {activeTab === 'new' ? 'Create Account' : activeTab === 'existing' ? 'Welcome Back' : 'Recover Access'}
                             </h2>
-                            <p className="text-gray-400 text-sm">
+                            <p className="text-gray-400 text-sm font-body">
                                 {activeTab === 'recovery' ? 'Enter your details to reset password.' : 'Join the elite arena of esports analytics.'}
                             </p>
                         </div>
@@ -193,7 +193,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                 <button
                                     key={tab}
                                     onClick={() => setActiveTab(tab)}
-                                    className={`flex-1 py-2.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all relative z-10 ${activeTab === tab ? 'text-white' : 'text-gray-500 hover:text-gray-300'
+                                    className={`flex-1 py-2.5 text-xs font-button font-black uppercase tracking-widest rounded-xl transition-all relative z-10 ${activeTab === tab ? 'text-white' : 'text-gray-500 hover:text-gray-300'
                                         }`}
                                 >
                                     {tab === 'new' ? 'New User' : 'Existing User'}
@@ -220,7 +220,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                     {signupStep === 1 ? (
                                         <form onSubmit={handleSendOTP} className="space-y-4">
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Full Name</label>
+                                                <label className="text-[10px] font-body font-bold uppercase tracking-widest text-gray-500 ml-1">Full Name</label>
                                                 <div className="relative">
                                                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                                     <input
@@ -235,7 +235,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Username</label>
+                                                <label className="text-[10px] font-body font-bold uppercase tracking-widest text-gray-500 ml-1">Username</label>
                                                 <div className="relative">
                                                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                                     <input
@@ -265,7 +265,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
+                                                <label className="text-[10px] font-body font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
                                                 <div className="relative">
                                                     <LogIn className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                                     <input
@@ -287,7 +287,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Confirm Password</label>
+                                                <label className="text-[10px] font-body font-bold uppercase tracking-widest text-gray-500 ml-1">Confirm Password</label>
                                                 <div className="relative">
                                                     <LogIn className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                                     <input
@@ -319,7 +319,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                                 disabled={isLoading}
                                                 whileHover={{ scale: 1.02, backgroundColor: 'var(--color-neon-blue)', color: 'black' }}
                                                 whileTap={{ scale: 0.98 }}
-                                                className="w-full py-4 bg-white text-black font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
+                                                className="w-full py-4 bg-white text-black font-button font-bold uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
                                             >
                                                 {isLoading ? 'Sending OTP...' : 'Send OTP to Gmail'}
                                             </motion.button>
@@ -327,7 +327,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                     ) : (
                                         <form onSubmit={handleVerifyOTP} className="space-y-4">
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Enter OTP</label>
+                                                <label className="text-[10px] font-body font-bold uppercase tracking-widest text-gray-500 ml-1">Enter OTP</label>
                                                 <div className="relative">
                                                     <LogIn className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                                     <input
@@ -340,7 +340,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                                         required
                                                     />
                                                 </div>
-                                                <p className="text-[10px] text-gray-500 text-center mt-2 italic">Mock OTP: 123456</p>
+                                                <p className="text-[10px] font-dashboard text-gray-500 text-center mt-2 italic">Mock OTP: 123456</p>
                                             </div>
 
                                             {error && (
@@ -354,22 +354,22 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                                 disabled={isLoading}
                                                 whileHover={{ scale: 1.02, backgroundColor: 'white', color: 'black' }}
                                                 whileTap={{ scale: 0.98 }}
-                                                className="w-full py-4 bg-neon-purple text-white font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
+                                                className="w-full py-4 bg-neon-purple text-white font-button font-bold uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
                                             >
                                                 {isLoading ? 'Verifying...' : 'Verify Access'}
                                             </motion.button>
                                             <button
                                                 type="button"
                                                 onClick={() => setSignupStep(1)}
-                                                className="w-full text-xs text-gray-500 hover:text-white transition-colors uppercase font-bold tracking-widest"
+                                                className="w-full text-xs text-gray-500 hover:text-white transition-colors uppercase font-button font-bold tracking-widest"
                                             >
                                                 Change Email
                                             </button>
                                         </form>
                                     )}
 
-                                    <p className="text-center text-xs text-gray-500 px-4">
-                                        By signing up, you agree to our Terms of Service and Privacy Policy.
+                                    <p className="text-center text-[10px] font-body text-gray-500 px-4">
+                                        By signing up, you agree to our <span className="text-white cursor-pointer hover:underline">Terms of Service</span> and <span className="text-white cursor-pointer hover:underline">Privacy Policy</span>.
                                     </p>
                                 </motion.div>
                             ) : activeTab === 'existing' ? (
@@ -381,7 +381,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                 >
                                     <form onSubmit={handleLogin} className="space-y-4">
                                         <div className="space-y-2">
-                                            <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Username</label>
+                                            <label className="text-[10px] font-body font-bold uppercase tracking-widest text-gray-500 ml-1">Username</label>
                                             <div className="relative">
                                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                                 <input
@@ -395,11 +395,11 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                         </div>
                                         <div className="space-y-2">
                                             <div className="flex justify-between items-center ml-1">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Password</label>
+                                                <label className="text-[10px] font-body font-bold uppercase tracking-widest text-gray-500">Password</label>
                                                 <button
                                                     type="button"
                                                     onClick={() => setActiveTab('recovery')}
-                                                    className="text-[10px] font-bold uppercase tracking-widest text-neon-blue hover:text-white transition-colors"
+                                                    className="text-[9px] font-button font-bold uppercase tracking-widest text-neon-blue hover:text-white transition-colors"
                                                 >
                                                     Forgot Password?
                                                 </button>
@@ -438,7 +438,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                             disabled={isLoading}
                                             whileHover={{ scale: 1.02, opacity: 0.9 }}
                                             whileTap={{ scale: 0.98 }}
-                                            className="w-full py-4 bg-neon-purple text-white font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl mt-4"
+                                            className="w-full py-4 bg-neon-purple text-white font-button font-bold uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl mt-4"
                                         >
                                             {isLoading ? 'Authenticating...' : 'Login to Arena'}
                                         </motion.button>
@@ -480,7 +480,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                                 disabled={isLoading}
                                                 whileHover={{ scale: 1.02, backgroundColor: 'var(--color-neon-blue)', color: 'black' }}
                                                 whileTap={{ scale: 0.98 }}
-                                                className="w-full py-4 bg-white text-black font-bold uppercase tracking-wider rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
+                                                className="w-full py-4 bg-white text-black font-button font-bold uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait shadow-xl"
                                             >
                                                 {isLoading ? 'Sending...' : 'Send Recovery Link'}
                                             </motion.button>
@@ -488,7 +488,7 @@ const AuthModal = ({ isOpen, onClose, onLoginSuccess }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => setActiveTab('existing')}
-                                                className="w-full text-xs text-gray-500 hover:text-white transition-colors uppercase font-bold tracking-widest text-center"
+                                                className="w-full text-xs text-gray-500 hover:text-white transition-colors uppercase font-button font-bold tracking-widest text-center"
                                             >
                                                 Back to Login
                                             </button>

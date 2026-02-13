@@ -4,6 +4,8 @@ import { Trophy, Users, User, BarChart3, Radio, ChevronRight, MapPin, Swords, Ta
 import { useFollowedTeams } from '../context/FollowedTeamsContext';
 import { ffData } from '../data/ffData';
 
+import GameBackground from './ui/GameBackground';
+
 const FreeFirePage = ({ onBack }) => {
     const [activeSection, setActiveSection] = useState('live');
     const [selectedMatch, setSelectedMatch] = useState(null);
@@ -58,33 +60,33 @@ const FreeFirePage = ({ onBack }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen bg-[#050505] text-white pt-24 pb-20 relative overflow-hidden font-outfit"
-            style={{ backgroundImage: 'radial-gradient(circle at 50% -20%, rgba(255, 215, 0, 0.15), transparent)' }}
+            className="min-h-screen bg-[#050505] text-white pt-24 pb-20 relative overflow-hidden font-body"
         >
-            <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
-                <div className="absolute top-20 left-10 w-96 h-96 bg-[#FFD700] rounded-full blur-[150px] animate-pulse" />
-                <div className="absolute bottom-40 right-10 w-80 h-80 bg-[#FF8C00] rounded-full blur-[120px]" />
-            </div>
+            {/* Universal Esports Background */}
+            <GameBackground game="freefire" />
 
             <div className="container mx-auto px-6 relative z-10">
                 <div className="flex items-center gap-4 mb-8">
-                    <button onClick={onBack} className="p-2 hover:bg-white/10 rounded-full transition-colors group">
+                    <button onClick={onBack} className="p-2 hover:bg-white/10 rounded-full transition-colors group bg-black/40 backdrop-blur-md border border-white/5">
                         <ChevronRight className="w-6 h-6 rotate-180 group-hover:-translate-x-1 transition-transform" />
                     </button>
                     <div>
-                        <h1 className="text-4xl font-black uppercase tracking-tighter flex items-center gap-3">
-                            Free Fire <span className="text-[#FFD700] italic">Hub</span>
+                        <h1 className="text-4xl font-heading font-black uppercase tracking-tighter flex items-center gap-3 italic">
+                            Free Fire <span className="text-[#FFD700] not-italic">Hub</span>
                         </h1>
-                        <p className="text-gray-400 text-sm font-medium">Esports Arena • Live Coverage</p>
+                        <p className="text-gray-400 text-sm font-body font-medium tracking-tight uppercase italic flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-ping" />
+                            Survivor Arena • Live Coverage
+                        </p>
                     </div>
                 </div>
 
-                <div className="sticky top-20 z-40 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-2 mb-10 flex flex-wrap gap-2">
+                <div className="sticky top-20 z-40 bg-black/60 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 mb-10 flex flex-wrap gap-2 shadow-2xl">
                     {navItems.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => !isLoading && setActiveSection(item.id)}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase text-xs tracking-widest transition-all ${activeSection === item.id ? 'bg-[#FFD700] text-black shadow-[0_0_20px_rgba(255,215,0,0.3)]' : 'text-gray-400 hover:text-white hover:bg-white/5'} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-button font-black uppercase text-xs tracking-widest transition-all ${activeSection === item.id ? 'bg-[#FFD700] text-black shadow-[0_0_20px_rgba(255,215,0,0.3)]' : 'text-gray-400 hover:text-white hover:bg-white/5'} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             <item.icon className="w-4 h-4" />
                             {item.name}
@@ -226,8 +228,8 @@ const LiveMatches = ({ onSelectMatch }) => {
                 <div className="w-20 h-20 bg-[#FFD700]/10 rounded-3xl flex items-center justify-center mb-6 border border-[#FFD700]/20">
                     <Radio className="w-10 h-10 text-[#FFD700] opacity-60" />
                 </div>
-                <h3 className="text-2xl font-black uppercase tracking-tighter mb-2">No Live Matches Right Now</h3>
-                <p className="text-gray-500 font-bold uppercase text-xs tracking-widest max-w-md leading-relaxed">Check back soon for upcoming games. Live arena feeds will appear here.</p>
+                <h3 className="text-2xl font-heading font-black uppercase tracking-tighter mb-2">No Live Matches Right Now</h3>
+                <p className="text-gray-500 font-body font-bold uppercase text-xs tracking-widest max-w-md leading-relaxed">Check back soon for upcoming games. Live arena feeds will appear here.</p>
             </div>
         );
     }
@@ -235,20 +237,20 @@ const LiveMatches = ({ onSelectMatch }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {ffData.liveMatches.map((match) => (
                 <div key={match.id} onClick={() => onSelectMatch(match)} className="group relative bg-[#111] border border-white/5 rounded-3xl p-8 hover:border-[#FFD700]/30 transition-all cursor-pointer overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 p-6"><span className="flex items-center gap-2 px-3 py-1 bg-red-600 rounded-full text-[10px] font-black uppercase animate-pulse"><Radio className="w-3 h-3" /> Live</span></div>
-                    <div className="mb-6"><h3 className="text-[#FFD700] font-black uppercase text-sm tracking-widest mb-1">{match.tournament}</h3><p className="text-gray-500 text-xs font-bold uppercase">{match.round} • {match.map}</p></div>
+                    <div className="absolute top-0 right-0 p-6"><span className="flex items-center gap-2 px-3 py-1 bg-red-600 rounded-full text-[10px] font-button font-black uppercase animate-pulse"><Radio className="w-3 h-3" /> Live</span></div>
+                    <div className="mb-6"><h3 className="text-[#FFD700] font-heading font-black uppercase text-sm tracking-widest mb-1">{match.tournament}</h3><p className="text-gray-500 text-xs font-body font-bold uppercase">{match.round} • {match.map}</p></div>
                     <div className="space-y-4">
                         {match.teams.map((team, idx) => (
                             <div key={team.name} className="flex items-center justify-between">
                                 <div className="flex items-center gap-4"><span className={`w-1 h-10 rounded-full ${idx === 0 ? 'bg-[#FFD700]' : 'bg-gray-700'}`} /><div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center font-black text-xs">{team.logo}</div><span className="font-bold text-lg">{team.name}</span></div>
                                 <div className="flex items-center gap-6">
-                                    <div className="text-right"><p className="text-[10px] text-gray-500 uppercase font-bold">Kills</p><p className="font-black text-xl">{team.kills}</p></div>
-                                    <div className="text-right min-w-[40px]"><p className="text-[10px] text-gray-500 uppercase font-bold">Rank</p><p className={`font-black text-xl ${idx === 0 ? 'text-[#FFD700]' : ''}`}>#{team.rank}</p></div>
+                                    <div className="text-right"><p className="text-[10px] text-gray-500 uppercase font-body font-bold">Kills</p><p className="font-heading font-black text-xl">{team.kills}</p></div>
+                                    <div className="text-right min-w-[40px]"><p className="text-[10px] text-gray-500 uppercase font-body font-bold">Rank</p><p className={`font-heading font-black text-xl ${idx === 0 ? 'text-[#FFD700]' : ''}`}>#{team.rank}</p></div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-[#FFD700] transition-colors"><span className="text-xs font-bold uppercase tracking-widest">Open Match Center</span><ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></div>
+                    <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-[#FFD700] transition-colors"><span className="text-xs font-button font-black uppercase tracking-widest">Open Match Center</span><ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></div>
                 </div>
             ))}
         </div>
@@ -262,9 +264,9 @@ const MatchCenter = ({ match, onClose }) => (
             <div className="p-10 bg-[#FFD700] text-black w-full md:w-80 shrink-0 flex flex-col justify-between">
                 <div>
                     <button onClick={onClose} className="mb-8 hover:bg-black/10 p-2 rounded-full transition-colors"><ChevronRight className="w-8 h-8 rotate-180" /></button>
-                    <h2 className="text-5xl font-black uppercase tracking-tighter leading-none mb-4">Match<br />Center</h2>
-                    <div className="bg-black text-white px-3 py-1 inline-block rounded-full text-[10px] font-black uppercase tracking-widest mb-6">Live Coverage</div>
-                    <div className="space-y-4"><div className="flex items-center gap-3"><MapPin className="w-4 h-4" /><span className="text-sm font-black uppercase">Purgatory</span></div><div className="flex items-center gap-3"><Radio className="w-4 h-4" /><span className="text-sm font-black uppercase">Round 4 / 6</span></div></div>
+                    <h2 className="text-5xl font-heading font-black uppercase tracking-tighter leading-none mb-4">Match<br />Center</h2>
+                    <div className="bg-black text-white px-3 py-1 inline-block rounded-full text-[10px] font-button font-black uppercase tracking-widest mb-6">Live Coverage</div>
+                    <div className="space-y-4"><div className="flex items-center gap-3"><MapPin className="w-4 h-4" /><span className="text-sm font-button font-black uppercase">Purgatory</span></div><div className="flex items-center gap-3"><Radio className="w-4 h-4" /><span className="text-sm font-button font-black uppercase">Round 4 / 6</span></div></div>
                 </div>
                 <div className="mt-10">
                     <p className="text-[10px] uppercase font-bold opacity-60 mb-2">Current MVP</p>
@@ -272,7 +274,7 @@ const MatchCenter = ({ match, onClose }) => (
                 </div>
             </div>
             <div className="flex-1 p-10 overflow-y-auto">
-                <div className="flex items-center justify-between mb-8"><h3 className="text-2xl font-black uppercase tracking-tight">Real-time Leaderboard</h3><BarChart3 className="w-6 h-6 text-[#FFD700]" /></div>
+                <div className="flex items-center justify-between mb-8"><h3 className="text-2xl font-heading font-black uppercase tracking-tight">Real-time Leaderboard</h3><BarChart3 className="w-6 h-6 text-[#FFD700]" /></div>
                 <div className="space-y-3">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
                         <div key={i} className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-white/20 transition-all">
@@ -291,7 +293,7 @@ const TournamentHub = () => (
         {ffData.tournaments.map((tourney) => (
             <div key={tourney.id} className="group bg-[#111] border border-white/5 rounded-3xl p-8 hover:bg-gradient-to-br hover:from-[#111] hover:to-[#FFD700]/5 hover:border-[#FFD700]/20 transition-all">
                 <div className="flex justify-between items-start mb-6"><div className="p-4 bg-[#FFD700]/10 rounded-2xl"><Trophy className="w-8 h-8 text-[#FFD700]" /></div><span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${tourney.status === 'Ongoing' ? 'bg-[#FFD700] text-black' : 'bg-white/10 text-white'}`}>{tourney.status}</span></div>
-                <h3 className="text-2xl font-black uppercase tracking-tighter mb-2 group-hover:text-[#FFD700] transition-colors">{tourney.name}</h3>
+                <h3 className="text-2xl font-heading font-black uppercase tracking-tighter mb-2 group-hover:text-[#FFD700] transition-colors">{tourney.name}</h3>
                 <p className="text-gray-500 text-sm font-bold uppercase mb-6">{tourney.region} • {tourney.format}</p>
                 <div className="grid grid-cols-2 gap-4"><div className="bg-white/5 p-4 rounded-2xl"><p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Prize Pool</p><p className="text-lg font-black text-[#FFD700]">{tourney.prizePool}</p></div><div className="bg-white/5 p-4 rounded-2xl"><p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Total Teams</p><p className="text-lg font-black">{tourney.teams}</p></div></div>
             </div>
@@ -307,7 +309,7 @@ const TeamSection = () => {
                 const followed = isFollowing(team.id);
                 return (
                     <div key={team.id} className="bg-[#111] border border-white/5 rounded-3xl p-8 hover:border-[#FFD700]/20 transition-all">
-                        <div className="flex items-center gap-6 mb-8"><div className="w-20 h-20 bg-white/5 rounded-[2rem] flex items-center justify-center text-3xl font-black border border-white/10" style={{ color: team.color }}>{team.logo}</div><div className="flex-1"><h3 className="text-3xl font-black uppercase tracking-tighter">{team.name}</h3><div className="flex gap-2 mt-2">{team.achievements.slice(0, 1).map((ach) => (<span key={ach} className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/5 rounded-full text-[#FF8C00]">🏆 {ach}</span>))}</div></div>
+                        <div className="flex items-center gap-6 mb-8"><div className="w-20 h-20 bg-white/5 rounded-[2rem] flex items-center justify-center text-3xl font-heading font-black border border-white/10" style={{ color: team.color }}>{team.logo}</div><div className="flex-1"><h3 className="text-3xl font-heading font-black uppercase tracking-tighter">{team.name}</h3><div className="flex gap-2 mt-2">{team.achievements.slice(0, 1).map((ach) => (<span key={ach} className="text-[10px] font-button font-black uppercase tracking-widest px-3 py-1 bg-white/5 rounded-full text-[#FF8C00]">🏆 {ach}</span>))}</div></div>
                             <motion.button
                                 whileTap={{ scale: 0.9 }}
                                 onClick={() => toggleFollow({ ...team, game: 'Free Fire' })}
@@ -335,7 +337,7 @@ const PlayerSection = () => (
             <div key={player.id} className="bg-[#111] border border-white/5 rounded-3xl p-8 hover:border-[#FFD700]/20 transition-all flex flex-col xl:flex-row gap-8">
                 <div className="shrink-0 text-center xl:text-left"><div className="w-24 h-24 bg-gradient-to-br from-[#FFD700]/20 to-[#FF8C00]/20 rounded-[2rem] mx-auto xl:mx-0 mb-4 border border-white/10 flex items-center justify-center p-2"><img src={player.img} alt={player.name} className="w-full h-full" /></div><span className="px-4 py-1 bg-[#FFD700] text-black text-[10px] font-black uppercase tracking-widest rounded-full">{player.role}</span></div>
                 <div className="flex-1">
-                    <div className="mb-6 flex flex-col xl:flex-row xl:items-end justify-between gap-4"><div><h3 className="text-3xl font-black uppercase tracking-tighter mb-1">{player.name}</h3><p className="text-gray-500 text-xs font-bold uppercase tracking-widest">{player.team}</p></div><div className="flex gap-1 h-6">{player.performance.map((val, idx) => (<div key={idx} className="w-2 bg-[#FFD700]/30 rounded-t-sm self-end" style={{ height: `${(val / 20) * 100}%` }} />))}</div></div>
+                    <div className="mb-6 flex flex-col xl:flex-row xl:items-end justify-between gap-4"><div><h3 className="text-3xl font-heading font-black uppercase tracking-tighter mb-1">{player.name}</h3><p className="text-gray-500 text-xs font-body font-bold uppercase tracking-widest">{player.team}</p></div><div className="flex gap-1 h-6">{player.performance.map((val, idx) => (<div key={idx} className="w-2 bg-[#FFD700]/30 rounded-t-sm self-end" style={{ height: `${(val / 20) * 100}%` }} />))}</div></div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4"><MiniStat label="K/D" value={player.stats.kd} icon={Target} /><MiniStat label="Kills" value={player.stats.kills} icon={Swords} /><MiniStat label="Matches" value={player.stats.matches} icon={Zap} /><MiniStat label="MVP" value={player.stats.mvp} icon={Trophy} color="text-[#FFD700]" /></div>
                 </div>
             </div>
@@ -346,7 +348,7 @@ const PlayerSection = () => (
 const StatsSection = () => (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2 space-y-6">
-            <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-3"><Swords className="text-[#FFD700]" /> Season MVPs</h3>
+            <h3 className="text-2xl font-heading font-black uppercase tracking-tight flex items-center gap-3"><Swords className="text-[#FFD700]" /> Season MVPs</h3>
             <div className="bg-[#111] border border-white/5 rounded-[2.5rem] p-8">
                 {[1, 2, 3].map((i) => (
                     <div key={i} className={`flex items-center justify-between py-6 ${i !== 3 ? 'border-b border-white/5' : ''}`}>
