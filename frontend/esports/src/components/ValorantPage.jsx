@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Users, User, BarChart3, Radio, ChevronRight, MapPin, Swords, Target, Zap, AlertTriangle, RefreshCw, Clock, Heart, UserPlus } from 'lucide-react';
+import { Trophy, Users, User, BarChart3, Radio, ChevronRight, MapPin, Swords, Target, Zap, AlertTriangle, RefreshCw } from 'lucide-react';
 import { useFollowedTeams } from '../context/FollowedTeamsContext';
+import { useFollowedPlayers } from '../context/FollowedPlayersContext';
 import { valorantData } from '../data/valorantData';
 
-import GameBackground from './ui/GameBackground';
-
 const ValorantPage = ({ onBack }) => {
-    const [activeSection, setActiveSection] = useState('live');
+    const [activeSection, setActiveSection] = useState(() => {
+        return window.location.hash === '#teams' ? 'teams' : 'live';
+    });
     const [selectedMatch, setSelectedMatch] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [dataLoadedAt, setDataLoadedAt] = useState(null);
 
     const navItems = [
         { id: 'live', name: 'Live', icon: Radio },
@@ -22,71 +21,74 @@ const ValorantPage = ({ onBack }) => {
     ];
 
     useEffect(() => {
-        loadData();
+        const handleHashChange = () => {
+            if (window.location.hash === '#teams') {
+                setActiveSection('teams');
+            }
+        };
+        window.addEventListener('hashchange', handleHashChange);
+        return () => window.removeEventListener('hashchange', handleHashChange);
+    }, []);
+
+    useEffect(() => {
+        // Simulating data load if needed, or just ready state
     }, []);
 
     const loadData = () => {
-        setIsLoading(true);
-        setError(null);
-        setTimeout(() => {
-            if (Math.random() < 0.02) {
-                setError("VP Protocol sync failed: Riot servers unreachable.");
-                setIsLoading(false);
-                return;
-            }
-            setDataLoadedAt(new Date(Date.now() - 6 * 60 * 1000));
-            setIsLoading(false);
-        }, 800);
+        // Data reload logic
     };
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#0a0a0c] text-white flex flex-col items-center justify-center p-6 text-center">
-                <div className="w-20 h-20 bg-red-600/10 rounded-3xl flex items-center justify-center mb-6 border border-red-600/20 shadow-[0_0_30px_rgba(255,70,85,0.1)]">
-                    <AlertTriangle className="w-10 h-10 text-red-500" />
+            <div className="min-h-screen bg-bg-dark text-white flex flex-col items-center justify-center p-6 text-center font-sans">
+                <div className="w-20 h-20 bg-gold/10 rounded-3xl flex items-center justify-center mb-6 border border-gold/20 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
+                    <AlertTriangle className="w-10 h-10 text-gold" />
                 </div>
-                <h2 className="text-3xl font-heading font-black uppercase tracking-tighter mb-2 italic">Operation Failed</h2>
-                <p className="text-gray-500 max-w-md mb-8 font-body font-bold uppercase text-xs tracking-widest leading-loose">{error}</p>
+                <h2 className="text-3xl font-bold uppercase tracking-tighter mb-2 italic">Operation Failed</h2>
+                <p className="text-gray-500 max-w-md mb-8 font-bold uppercase text-xs tracking-widest leading-loose">{error}</p>
                 <div className="flex gap-4">
-                    <button onClick={onBack} className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-black uppercase tracking-widest rounded-full transition-all border border-white/10">Abort</button>
-                    <button onClick={loadData} className="px-8 py-3 bg-[#ff4655] hover:bg-white hover:text-black text-white font-black uppercase tracking-widest rounded-full transition-all flex items-center gap-2 shadow-[0_0_30px_rgba(255,70,85,0.3)]"><RefreshCw className="w-4 h-4" /> Re-sync</button>
+                    <button onClick={onBack} className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold uppercase tracking-widest rounded-full transition-all border border-white/10">Abort</button>
+                    <button onClick={loadData} className="px-8 py-3 bg-gold hover:bg-white hover:text-black text-bg-dark font-bold uppercase tracking-widest rounded-full transition-all flex items-center gap-2 shadow-[0_0_30px_rgba(212,175,55,0.3)]"><RefreshCw className="w-4 h-4" /> Re-sync</button>
                 </div>
             </div>
         );
     }
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="min-h-screen bg-[#0a0a0c] text-white pt-24 pb-20 relative overflow-hidden font-body"
-        >
-            {/* Universal Esports Background */}
-            <GameBackground game="valorant" />
+        <div className="min-h-screen bg-bg-dark text-white pt-24 pb-20 relative overflow-hidden font-sans animate-fade-in">
+            {/* Ambient Background */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-gold/[0.05] blur-[150px] rounded-full" />
+                <div className="absolute bottom-[-15%] left-[-10%] w-[600px] h-[600px] bg-amber/[0.05] blur-[130px] rounded-full" />
+            </div>
 
             <div className="container mx-auto px-6 relative z-10">
+                {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <button onClick={onBack} className="p-2 hover:bg-white/10 rounded-full transition-colors group bg-black/40 backdrop-blur-md border border-white/5">
-                        <ChevronRight className="w-6 h-6 rotate-180 group-hover:-translate-x-1 transition-transform" />
+                    <button onClick={onBack} className="w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-gold/10 hover:border-gold/30 transition-all duration-300 group">
+                        <ChevronRight className="w-6 h-6 rotate-180 text-gray-400 group-hover:text-gold transition-colors" />
                     </button>
                     <div>
-                        <h1 className="text-4xl font-heading font-black uppercase tracking-tighter flex items-center gap-3 italic">
-                            VALORANT <span className="text-[#ff4655] not-italic">HUB</span>
+                        <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter flex items-center gap-3 italic">
+                            VALORANT
                         </h1>
-                        <p className="text-gray-400 text-sm font-body font-medium tracking-tight uppercase italic flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-[#ff4655] animate-ping" />
+                        <p className="text-gray-400 text-sm font-bold tracking-widest uppercase flex items-center gap-2 mt-1">
+                            <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
                             Tactical Protocol • VCT 2026
                         </p>
                     </div>
                 </div>
 
-                <div className="sticky top-20 z-40 bg-black/60 backdrop-blur-2xl border border-white/10 rounded-2xl p-2 mb-10 flex flex-wrap gap-2 shadow-2xl">
+                {/* Navigation */}
+                <div className="sticky top-24 z-40 bg-bg-dark/80 backdrop-blur-md border border-white/10 rounded-2xl p-2 mb-10 flex flex-wrap gap-2 shadow-2xl">
                     {navItems.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => !isLoading && setActiveSection(item.id)}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-button font-bold uppercase text-xs tracking-widest transition-all ${activeSection === item.id ? 'bg-[#ff4655] text-white shadow-[0_0_20px_rgba(255,70,85,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase text-xs tracking-widest transition-all duration-300 ${activeSection === item.id
+                                ? 'bg-gold text-bg-dark shadow-[0_0_20px_rgba(212,175,55,0.4)]'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             <item.icon className="w-4 h-4" />
                             {item.name}
@@ -94,124 +96,18 @@ const ValorantPage = ({ onBack }) => {
                     ))}
                 </div>
 
-                <main className="min-h-[60vh]">
-                    <DataDelayBanner loadedAt={dataLoadedAt} />
-                    <AnimatePresence mode="wait">
-                        {isLoading ? (
-                            <SkeletonLoader key="skeleton" type={activeSection} />
-                        ) : (
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                                {activeSection === 'live' && <LiveMatches onSelectMatch={setSelectedMatch} />}
-                                {activeSection === 'tournaments' && <TournamentHub />}
-                                {activeSection === 'teams' && <TeamSection />}
-                                {activeSection === 'players' && <PlayerSection />}
-                                {activeSection === 'stats' && <StatsSection />}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                {/* Main Content */}
+                <main className="min-h-[60vh] animate-fade-in-up">
+                    {activeSection === 'live' && <LiveMatches onSelectMatch={setSelectedMatch} />}
+                    {activeSection === 'tournaments' && <TournamentSection />}
+                    {activeSection === 'teams' && <TeamSection />}
+                    {activeSection === 'players' && <PlayerSection />}
+                    {activeSection === 'stats' && <StatsSection />}
                 </main>
             </div>
 
-            <AnimatePresence>
-                {selectedMatch && <MatchCenter match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
-            </AnimatePresence>
-        </motion.div>
-    );
-};
-
-const DataDelayBanner = ({ loadedAt }) => {
-    if (!loadedAt) return null;
-    const mins = Math.floor((Date.now() - loadedAt.getTime()) / 60000);
-    if (mins < 5) return null;
-    return (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-center gap-3 px-5 py-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-400 text-xs font-bold uppercase tracking-widest">
-            <Clock className="w-4 h-4" />
-            Data delayed — last updated {mins} min ago
-        </motion.div>
-    );
-};
-
-const SkeletonLoader = ({ type }) => {
-    if (type === 'live') {
-        return (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {[1, 2].map((i) => (
-                    <div key={i} className="bg-[#111115] border border-white/10 rounded-3xl p-8 shadow-xl overflow-hidden">
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="space-y-2">
-                                <div className="w-32 h-4 rounded-lg skeleton-shimmer" />
-                                <div className="w-24 h-3 rounded-lg skeleton-shimmer opacity-50" />
-                            </div>
-                            <div className="w-16 h-6 rounded-full skeleton-shimmer" />
-                        </div>
-                        <div className="space-y-4">
-                            {[1, 2].map((t) => (
-                                <div key={t} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-1 h-10 rounded-full skeleton-shimmer" />
-                                        <div className="w-10 h-10 rounded-lg skeleton-shimmer" />
-                                        <div className="w-28 h-5 rounded-lg skeleton-shimmer" />
-                                    </div>
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-10 h-8 rounded-lg skeleton-shimmer" />
-                                        <div className="w-10 h-8 rounded-lg skeleton-shimmer" />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="mt-8 pt-6 border-t border-white/5">
-                            <div className="w-36 h-3 rounded-lg skeleton-shimmer" />
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    }
-    if (type === 'stats') {
-        return (
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                <div className="xl:col-span-2 bg-[#111115] border border-white/5 rounded-[2.5rem] p-8 shadow-2xl space-y-6">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="flex items-center justify-between py-5 px-4 rounded-2xl">
-                            <div className="flex items-center gap-6">
-                                <div className="w-8 h-8 rounded-lg skeleton-shimmer" />
-                                <div className="w-12 h-12 rounded-2xl skeleton-shimmer" />
-                                <div className="space-y-2">
-                                    <div className="w-32 h-5 rounded-lg skeleton-shimmer" />
-                                    <div className="w-20 h-3 rounded-lg skeleton-shimmer opacity-50" />
-                                </div>
-                            </div>
-                            <div className="w-16 h-8 rounded-lg skeleton-shimmer" />
-                        </div>
-                    ))}
-                </div>
-                <div className="bg-[#111115] border border-white/10 rounded-[2.5rem] p-8 shadow-2xl space-y-6">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="space-y-2">
-                            <div className="flex justify-between"><div className="w-20 h-3 rounded skeleton-shimmer" /><div className="w-10 h-3 rounded skeleton-shimmer" /></div>
-                            <div className="h-2 rounded-full skeleton-shimmer" />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        );
-    }
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-[#111115] border border-white/10 rounded-3xl p-8 shadow-xl overflow-hidden">
-                    <div className="flex justify-between items-start mb-6">
-                        <div className="w-16 h-16 rounded-2xl skeleton-shimmer" />
-                        <div className="w-24 h-6 rounded-full skeleton-shimmer" />
-                    </div>
-                    <div className="w-3/4 h-7 rounded-lg skeleton-shimmer mb-4" />
-                    <div className="w-1/2 h-4 rounded-lg skeleton-shimmer mb-8 opacity-50" />
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="h-16 rounded-2xl skeleton-shimmer" />
-                        <div className="h-16 rounded-2xl skeleton-shimmer" />
-                    </div>
-                </div>
-            ))}
+            {/* Match Center Modal */}
+            {selectedMatch && <MatchCenter match={selectedMatch} onClose={() => setSelectedMatch(null)} />}
         </div>
     );
 };
@@ -219,84 +115,147 @@ const SkeletonLoader = ({ type }) => {
 const LiveMatches = ({ onSelectMatch }) => {
     if (!valorantData.liveMatches || valorantData.liveMatches.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center py-24 text-center">
-                <div className="w-20 h-20 bg-[#ff4655]/10 rounded-3xl flex items-center justify-center mb-6 border border-[#ff4655]/20">
-                    <Radio className="w-10 h-10 text-[#ff4655] opacity-60" />
+            <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-white/10 rounded-3xl bg-white/[0.02]">
+                <div className="w-20 h-20 bg-[#FF1E1E]/10 rounded-3xl flex items-center justify-center mb-6 border border-[#FF1E1E]/20">
+                    <Radio className="w-10 h-10 text-[#FF1E1E] opacity-60" />
                 </div>
-                <h3 className="text-2xl font-heading font-black uppercase tracking-tighter italic mb-2">No Live Matches Right Now</h3>
-                <p className="text-gray-500 font-body font-bold uppercase text-xs tracking-widest max-w-md leading-relaxed">Check back soon for upcoming games. Live tactical feeds will appear here.</p>
+                <h3 className="text-2xl font-bold uppercase tracking-tighter italic mb-2">No Live Matches</h3>
+                <p className="text-gray-500 font-bold uppercase text-xs tracking-widest max-w-md leading-relaxed">Check back soon for upcoming games.</p>
             </div>
         );
     }
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {valorantData.liveMatches.map((match) => (
-                <motion.div
+                <div
                     key={match.id}
-                    whileHover={{ y: -8, scale: 1.01 }}
-                    className="group relative bg-[#111115] border border-white/5 rounded-3xl p-8 hover:border-[#ff4655]/40 transition-all cursor-pointer overflow-hidden shadow-2xl"
+                    className="group relative bg-card border border-white/5 rounded-3xl p-8 hover:border-gold/40 transition-all duration-300 cursor-pointer overflow-hidden shadow-2xl hover:-translate-y-1"
                     onClick={() => onSelectMatch(match)}
                 >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#ff4655]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute top-0 right-0 p-6"><span className="flex items-center gap-2 px-3 py-1 bg-[#ff4655] rounded-full text-[10px] font-button font-black uppercase animate-pulse shadow-[0_0_15px_rgba(255,70,85,0.5)]"><Radio className="w-3 h-3" /> Live</span></div>
-                    <div className="mb-6"><h3 className="text-[#ff4655] font-heading font-black uppercase text-sm tracking-widest mb-1 italic">{match.tournament}</h3><p className="text-gray-500 text-xs font-body font-bold uppercase">{match.round} • {match.map}</p></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent opacity-100 transition-opacity duration-300" />
+                    <div className="absolute top-0 right-0 p-6">
+                        <span className="flex items-center gap-2 px-3 py-1 bg-[#FF1E1E] text-white rounded-full text-[10px] font-bold uppercase tracking-wider animate-pulse shadow-[0_0_10px_rgba(255,30,30,0.4)]">
+                            <Radio className="w-3 h-3" /> Live
+                        </span>
+                    </div>
+                    <div className="mb-6">
+                        <h3 className="text-white font-black uppercase text-sm tracking-widest mb-1 italic group-hover:text-gold transition-colors">{match.tournament}</h3>
+                        <p className="text-gray-500 text-xs font-bold uppercase">{match.round} • {match.map}</p>
+                    </div>
                     <div className="space-y-4">
                         {match.teams.map((team, idx) => (
                             <div key={team.name} className="flex items-center justify-between">
-                                <div className="flex items-center gap-4"><span className={`w-1 h-10 rounded-full ${idx === 0 ? 'bg-[#ff4655]' : 'bg-gray-700'}`} /><div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center font-black text-xs border border-white/10 shadow-inner">{team.logo}</div><span className="font-bold text-lg tracking-tight uppercase">{team.name}</span></div>
+                                <div className="flex items-center gap-4">
+                                    <span className={`w-1 h-10 rounded-full ${idx === 0 ? 'bg-gold' : 'bg-gray-700'}`} />
+                                    <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center font-black text-xs border border-white/10 shadow-inner">
+                                        {team.logo}
+                                    </div>
+                                    <span className="font-bold text-lg tracking-tight uppercase">{team.name}</span>
+                                </div>
                                 <div className="flex items-center gap-6">
-                                    <div className="text-right"><p className="text-[10px] text-gray-500 uppercase font-body font-bold">Kills</p><p className="font-heading font-black text-2xl tracking-tighter italic">{team.kills}</p></div>
-                                    <div className="text-right min-w-[40px]"><p className="text-[10px] text-gray-500 uppercase font-body font-bold">Rank</p><p className={`font-heading font-black text-2xl tracking-tighter ${idx === 0 ? 'text-[#ff4655] italic' : ''}`}>#{team.rank}</p></div>
+                                    <div className="text-right">
+                                        <p className="text-[10px] text-gray-500 uppercase font-bold">Kills</p>
+                                        <p className="font-black text-2xl tracking-tighter italic">{team.kills}</p>
+                                    </div>
+                                    <div className="text-right min-w-[40px]">
+                                        <p className="text-[10px] text-gray-500 uppercase font-bold">Rank</p>
+                                        <p className={`font-black text-2xl tracking-tighter ${idx === 0 ? 'text-gold italic' : ''}`}>#{team.rank}</p>
+                                    </div>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-[#ff4655] transition-colors"><span className="text-[10px] font-button font-black uppercase tracking-widest text-[#00f2ff]">View Tactical Center</span><ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></div>
-                </motion.div>
+                    <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between group-hover:text-gold transition-colors">
+                        <span className="text-[10px] font-bold uppercase tracking-widest">View Tactical Center</span>
+                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                </div>
             ))}
         </div>
     );
 };
 
 const MatchCenter = ({ match, onClose }) => (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-10">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/95 backdrop-blur-xl" />
-        <motion.div initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 30 }} className="relative w-full max-w-5xl bg-[#0a0a0c] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_0_100px_rgba(255,70,85,0.15)] flex flex-col md:flex-row h-full max-h-[85vh]">
-            <div className="p-10 bg-[#ff4655] text-white w-full md:w-80 shrink-0 flex flex-col justify-between shadow-[inset_-20px_0_40px_rgba(0,0,0,0.1)]">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-10 animate-fade-in">
+        <div onClick={onClose} className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
+        <div className="relative w-full max-w-5xl bg-bg-dark border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_0_100px_rgba(212,175,55,0.15)] flex flex-col md:flex-row h-full max-h-[85vh] animate-scale-in">
+            <div className="p-10 bg-gradient-to-br from-gold to-amber text-bg-dark w-full md:w-80 shrink-0 flex flex-col justify-between shadow-[inset_-20px_0_40px_rgba(0,0,0,0.1)]">
                 <div>
-                    <button onClick={onClose} className="mb-8 hover:bg-black/10 p-2 rounded-full transition-colors"><ChevronRight className="w-8 h-8 rotate-180" /></button>
-                    <h2 className="text-5xl font-heading font-black uppercase tracking-tighter leading-none mb-4 italic">SPIKE<br />STATS</h2>
-                    <div className="bg-black text-[#ff4655] px-3 py-1 inline-block rounded-full text-[10px] font-button font-black uppercase tracking-widest mb-6 border border-[#ff4655]/20">Encrypted Stream</div>
-                    <div className="space-y-4 text-white/80"><div className="flex items-center gap-3 font-bold"><MapPin className="w-4 h-4" /><span className="text-sm font-black uppercase tracking-tight">{match.map}</span></div><div className="flex items-center gap-3 font-bold"><Radio className="w-4 h-4" /><span className="text-sm font-black uppercase tracking-tight">Round 12 / 24</span></div></div>
+                    <button onClick={onClose} className="mb-8 hover:bg-black/10 p-2 rounded-full transition-colors">
+                        <ChevronRight className="w-8 h-8 rotate-180" />
+                    </button>
+                    <h2 className="text-5xl font-black uppercase tracking-tighter leading-none mb-4 italic">SPIKE<br />STATS</h2>
+                    <div className="bg-bg-dark text-gold px-3 py-1 inline-block rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 border border-gold/20">Encrypted Stream</div>
+                    <div className="space-y-4 text-bg-dark/80">
+                        <div className="flex items-center gap-3 font-bold"><MapPin className="w-4 h-4" /><span className="text-sm font-black uppercase tracking-tight">{match.map}</span></div>
+                        <div className="flex items-center gap-3 font-bold"><Radio className="w-4 h-4" /><span className="text-sm font-black uppercase tracking-tight">Round 12 / 24</span></div>
+                    </div>
                 </div>
-                <div className="mt-10 pt-6 border-t border-white/20">
+                <div className="mt-10 pt-6 border-t border-bg-dark/20">
                     <p className="text-[10px] uppercase font-bold opacity-70 mb-2">Impact Leader</p>
-                    <div className="flex items-center gap-4"><div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center font-black text-[#ff4655] shadow-lg">VH</div><div><p className="font-black uppercase text-sm">Viper</p><p className="text-[10px] uppercase font-bold opacity-70 italic text-white/60">Sentinels</p></div></div>
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-bg-dark rounded-xl flex items-center justify-center font-black text-gold shadow-lg">VH</div>
+                        <div><p className="font-black uppercase text-sm">Viper</p><p className="text-[10px] uppercase font-bold opacity-70 italic text-bg-dark/60">Sentinels</p></div>
+                    </div>
                 </div>
             </div>
-            <div className="flex-1 p-10 overflow-y-auto bg-black/40 backdrop-blur-md">
-                <div className="flex items-center justify-between mb-8"><h3 className="text-2xl font-heading font-black uppercase tracking-tight italic">Scoreboard</h3><BarChart3 className="w-6 h-6 text-[#ff4655]" /></div>
+            <div className="flex-1 p-10 overflow-y-auto bg-bg-dark/50 backdrop-blur-md">
+                <div className="flex items-center justify-between mb-8">
+                    <h3 className="text-2xl font-black uppercase tracking-tight italic">Scoreboard</h3>
+                    <BarChart3 className="w-6 h-6 text-gold" />
+                </div>
                 <div className="space-y-3">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
-                        <div key={i} className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-[#ff4655]/20 transition-all group">
-                            <div className="flex items-center gap-6"><span className={`text-xl font-black ${i === 1 ? 'text-[#ff4655] italic scale-110' : 'text-gray-500'}`}>#{i}</span><div className="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center font-black text-[10px] shadow-inner">P-{i}</div><div><p className="font-bold uppercase tracking-wide group-hover:text-[#ff4655] transition-colors text-lg">Agent Alpha {i}</p><p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest italic flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#00f2ff]" /> ACS: {250 + i * 10}</p></div></div>
-                            <div className="flex items-center gap-8"><div className="text-right"><p className="text-[10px] text-gray-500 uppercase font-bold">K/D/A</p><p className="font-black text-xl italic">{20 - i}/{10 + i}/{5}</p></div><div className="text-right min-w-[70px] bg-[#ff4655]/10 border border-[#ff4655]/20 px-4 py-2 rounded-xl"><p className="text-[10px] text-[#ff4655] uppercase font-bold">Combat</p><p className="font-black text-xl text-[#ff4655] italic">{450 - i * 30}</p></div></div>
+                        <div key={i} className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-gold/20 transition-all group">
+                            <div className="flex items-center gap-6">
+                                <span className={`text-xl font-black ${i === 1 ? 'text-gold italic scale-110' : 'text-gray-500'}`}>#{i}</span>
+                                <div className="w-10 h-10 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center font-black text-[10px] shadow-inner">P-{i}</div>
+                                <div>
+                                    <p className="font-bold uppercase tracking-wide group-hover:text-gold transition-colors text-lg">Agent Alpha {i}</p>
+                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest italic flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-gold" /> ACS: {250 + i * 10}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-8">
+                                <div className="text-right"><p className="text-[10px] text-gray-500 uppercase font-bold">K/D/A</p><p className="font-black text-xl italic">{20 - i}/{10 + i}/{5}</p></div>
+                                <div className="text-right min-w-[70px] bg-gold/10 border border-gold/20 px-4 py-2 rounded-xl">
+                                    <p className="text-[10px] text-gold uppercase font-bold">Combat</p>
+                                    <p className="font-black text-xl text-gold italic">{450 - i * 30}</p>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
             </div>
-        </motion.div>
+        </div>
     </div>
 );
 
-const TournamentHub = () => (
+const TournamentSection = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {valorantData.tournaments.map((tourney) => (
-            <div key={tourney.id} className="group bg-[#111115] border border-white/5 rounded-3xl p-8 hover:bg-[#ff4655]/5 hover:border-[#ff4655]/20 transition-all shadow-xl">
-                <div className="flex justify-between items-start mb-6"><div className="p-4 bg-[#ff4655]/10 border border-[#ff4655]/20 rounded-2xl"><Trophy className="w-8 h-8 text-[#ff4655]" /></div><span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${tourney.status === 'Ongoing' ? 'bg-[#ff4655] text-white border-[#ff4655] transition-colors shadow-[0_0_10px_rgba(255,70,85,0.3)]' : 'bg-white/5 text-white border-white/10'}`}>{tourney.status}</span></div>
-                <h3 className="text-2xl font-heading font-black uppercase tracking-tighter mb-2 group-hover:text-[#ff4655] transition-colors italic">{tourney.name}</h3>
+            <div key={tourney.id} className="group bg-card border border-white/5 rounded-3xl p-8 hover:bg-gold/5 hover:border-gold/20 transition-all duration-300 shadow-xl">
+                <div className="flex justify-between items-start mb-6">
+                    <div className="p-4 bg-gold/10 border border-gold/20 rounded-2xl">
+                        <Trophy className="w-8 h-8 text-gold" />
+                    </div>
+                    <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${tourney.status === 'Ongoing' ? 'bg-gold text-bg-dark border-gold transition-colors shadow-[0_0_10px_rgba(212,175,55,0.3)]' : 'bg-white/5 text-white border-white/10'}`}>
+                        {tourney.status}
+                    </span>
+                </div>
+                <h3 className="text-2xl font-black uppercase tracking-tighter mb-2 group-hover:text-gold transition-colors italic">{tourney.name}</h3>
                 <p className="text-gray-500 text-sm font-bold uppercase mb-6 tracking-widest leading-none">Global Circuit • {tourney.format}</p>
-                <div className="grid grid-cols-2 gap-4"><div className="bg-white/5 border border-white/5 p-4 rounded-2xl shadow-inner"><p className="text-[9px] text-gray-500 uppercase font-bold mb-1 tracking-widest">Total Prize</p><p className="text-lg font-black text-[#ff4655] tracking-tighter italic">{tourney.prizePool}</p></div><div className="bg-white/5 border border-white/5 p-4 rounded-2xl shadow-inner"><p className="text-[9px] text-gray-500 uppercase font-bold mb-1 tracking-widest">Seeds</p><p className="text-lg font-black tracking-tighter italic">{tourney.teams}</p></div></div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white/5 border border-white/5 p-4 rounded-2xl shadow-inner">
+                        <p className="text-[9px] text-gray-500 uppercase font-bold mb-1 tracking-widest">Total Prize</p>
+                        <p className="text-lg font-black text-gold tracking-tighter italic">{tourney.prizePool}</p>
+                    </div>
+                    <div className="bg-white/5 border border-white/5 p-4 rounded-2xl shadow-inner">
+                        <p className="text-[9px] text-gray-500 uppercase font-bold mb-1 tracking-widest">Seeds</p>
+                        <p className="text-lg font-black tracking-tighter italic">{tourney.teams}</p>
+                    </div>
+                </div>
             </div>
         ))}
     </div>
@@ -304,31 +263,57 @@ const TournamentHub = () => (
 
 const TeamSection = () => {
     const { toggleFollow, isFollowing } = useFollowedTeams();
+
+    const handlePlayerClick = (playerName) => {
+        window.history.pushState({}, '', `/player/${playerName}`);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+    };
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {valorantData.teams.map((team) => {
                 const followed = isFollowing(team.id);
                 return (
-                    <div key={team.id} className="bg-[#111115] border border-white/5 rounded-3xl p-8 shadow-xl">
-                        <div className="flex items-center gap-6 mb-8"><div className="w-20 h-20 bg-white/5 border border-white/10 rounded-[2rem] flex items-center justify-center text-3xl font-heading font-black italic shadow-[0_0_30px_rgba(255,70,85,0.1)]" style={{ color: team.color }}>{team.logo}</div><div className="flex-1"><h3 className="text-3xl font-heading font-black uppercase tracking-tighter italic">{team.name}</h3><div className="flex gap-2 mt-2">{team.achievements.slice(0, 1).map((ach) => (<span key={ach} className="text-[9px] font-button font-black uppercase tracking-widest px-3 py-1 bg-[#ff4655]/10 border border-[#ff4655]/20 rounded-full text-[#ff4655] italic shadow-sm">🏆 {ach}</span>))}</div></div>
-                            <motion.button
+                    <div key={team.id} className="bg-card border border-white/5 rounded-3xl p-8 shadow-xl">
+                        <div className="flex items-center gap-6 mb-8">
+                            <div className="w-20 h-20 bg-white/5 border border-white/10 rounded-[2rem] flex items-center justify-center text-3xl font-black italic shadow-[0_0_30px_rgba(212,175,55,0.1)]" style={{ color: team.color }}>{team.logo}</div>
+                            <div className="flex-1">
+                                <h3 className="text-3xl font-black uppercase tracking-tighter italic">{team.name}</h3>
+                                <div className="flex gap-2 mt-2">
+                                    {team.achievements.slice(0, 1).map((ach) => (
+                                        <span key={ach} className="text-[9px] font-bold uppercase tracking-widest px-3 py-1 bg-gold/10 border border-gold/20 rounded-full text-gold italic shadow-sm">🏆 {ach}</span>
+                                    ))}
+                                </div>
+                            </div>
+                            <button
                                 onClick={() => toggleFollow({ ...team, game: 'Valorant' })}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isFollowing(team.id)
-                                    ? 'bg-[#ff4655] text-white shadow-[0_0_15px_rgba(255,70,85,0.4)]'
-                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/5'
+                                className={`shrink-0 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-200 border ${followed
+                                    ? 'bg-gold text-bg-dark shadow-[0_0_30px_rgba(212,175,55,0.8)] border-gold'
+                                    : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
                                     }`}
                             >
-                                <UserPlus className={`w-5 h-5 ${isFollowing(team.id) ? 'fill-current' : ''}`} />
-                            </motion.button>
+                                {followed ? 'Following' : 'Follow'}
+                            </button>
                         </div>
                         <div className="grid grid-cols-3 gap-3 mb-8">
                             <div className="bg-white/5 border border-white/5 p-4 rounded-2xl text-center shadow-inner"><p className="text-[9px] text-gray-500 uppercase font-bold mb-1 tracking-widest leading-none">Win %</p><p className="text-xl font-black italic">{team.stats.winRate}</p></div>
                             <div className="bg-white/5 border border-white/5 p-4 rounded-2xl text-center shadow-inner"><p className="text-[9px] text-gray-500 uppercase font-bold mb-1 tracking-widest leading-none">ACS Avg</p><p className="text-xl font-black italic">{team.stats.avgKills}</p></div>
                             <div className="bg-white/5 border border-white/5 p-4 rounded-2xl text-center shadow-inner"><p className="text-[9px] text-gray-500 uppercase font-bold mb-1 tracking-widest leading-none">Rating</p><p className="text-xl font-black italic">{team.stats.avgPoints}</p></div>
                         </div>
-                        <div className="space-y-4 shadow-inner p-2 rounded-2xl bg-black/20 border border-white/5"><p className="text-[9px] text-gray-500 uppercase font-black ml-2 tracking-[0.2em] mb-2 leading-none">Active Roster</p><div className="flex flex-wrap gap-2">{team.roster.map((p) => (<span key={p} className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black hover:bg-[#ff4655]/10 hover:border-[#ff4655]/30 transition-all uppercase cursor-pointer italic tracking-wider">{p}</span>))}</div></div>
+                        <div className="space-y-4 shadow-inner p-2 rounded-2xl bg-black/20 border border-white/5">
+                            <p className="text-[9px] text-gray-500 uppercase font-black ml-2 tracking-[0.2em] mb-2 leading-none">Active Roster</p>
+                            <div className="flex flex-wrap gap-2">
+                                {team.roster.map((p) => (
+                                    <span
+                                        key={p}
+                                        onClick={() => handlePlayerClick(p)}
+                                        className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-black hover:bg-gold/10 hover:border-gold/30 transition-all uppercase cursor-pointer italic tracking-wider hover:text-gold"
+                                    >
+                                        {p}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 );
             })}
@@ -336,45 +321,101 @@ const TeamSection = () => {
     );
 };
 
-const PlayerSection = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {valorantData.players.map((player) => (
-            <div key={player.id} className="bg-[#111115] border border-white/5 rounded-3xl p-8 transition-all flex flex-col xl:flex-row gap-8 shadow-xl border-l-[3px] border-l-[#ff4655]">
-                <div className="shrink-0 text-center xl:text-left"><div className="w-24 h-24 bg-gradient-to-br from-[#ff4655]/10 to-transparent rounded-[2.5rem] mx-auto xl:mx-0 mb-4 border border-white/10 flex items-center justify-center p-2 shadow-inner"><img src={player.img} alt={player.name} className="w-full h-full rounded-2xl" /></div><span className="px-4 py-1.5 bg-[#ff4655] text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-[0_0_15px_rgba(255,70,85,0.3)]">{player.role}</span></div>
-                <div className="flex-1">
-                    <div className="mb-6 flex flex-col xl:flex-row xl:items-end justify-between gap-4"><div><h3 className="text-3xl font-heading font-black uppercase tracking-tighter mb-1 italic">{player.name}</h3><p className="text-gray-400 text-[10px] font-body font-black uppercase tracking-[0.2em]">{player.team}</p></div><div className="flex gap-1 h-8">{player.performance.map((val, idx) => (<div key={idx} className="w-2.5 bg-[#ff4655]/20 rounded-t-sm self-end hover:bg-[#ff4655] transition-colors" style={{ height: `${(val / 30) * 100}%` }} />))}</div></div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div className="text-center xl:text-left"><p className="text-[9px] text-gray-500 uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Target className="w-3 h-3" /> K/D</p><p className="text-md font-black italic">{player.stats.kd}</p></div>
-                        <div className="text-center xl:text-left"><p className="text-[9px] text-gray-500 uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Swords className="w-3 h-3" /> Impact</p><p className="text-md font-black italic">{player.stats.kills}</p></div>
-                        <div className="text-center xl:text-left"><p className="text-[9px] text-gray-500 uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Zap className="w-3 h-3" /> ACS</p><p className="text-md font-black italic">{player.stats.matches}</p></div>
-                        <div className="text-center xl:text-left"><p className="text-[9px] text-[#ff4655] uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Trophy className="w-3 h-3" /> MVP</p><p className="text-md font-black italic text-[#ff4655]">{player.stats.mvp}</p></div>
+const PlayerSection = () => {
+    const { isFollowingPlayer, toggleFollowPlayer } = useFollowedPlayers();
+
+    const handlePlayerClick = (e, playerName) => {
+        e.preventDefault();
+        window.history.pushState({}, '', `/player/${playerName}`);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+    };
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {valorantData.players.map((player) => (
+                <div key={player.id} className="bg-card border border-white/5 rounded-3xl p-8 transition-all flex flex-col xl:flex-row gap-8 shadow-xl border-l-[3px] border-l-gold hover:-translate-y-1 group">
+                    <div className="shrink-0 text-center xl:text-left">
+                        <div
+                            onClick={(e) => handlePlayerClick(e, player.name)}
+                            className="w-24 h-24 bg-gradient-to-br from-gold/10 to-transparent rounded-[2.5rem] mx-auto xl:mx-0 mb-4 border border-white/10 flex items-center justify-center p-2 shadow-inner group-hover:border-gold/30 transition-colors cursor-pointer"
+                        >
+                            <img src={player.img} alt={player.name} className="w-full h-full rounded-2xl object-cover" />
+                        </div>
+                        <span className="px-4 py-1.5 bg-gold/10 text-gold border border-gold/20 text-[9px] font-black uppercase tracking-widest rounded-full">{player.role}</span>
+                    </div>
+                    <div className="flex-1">
+                        <div className="mb-6 flex flex-col xl:flex-row xl:items-end justify-between gap-4">
+                            <div>
+                                <h3
+                                    onClick={(e) => handlePlayerClick(e, player.name)}
+                                    className="text-3xl font-black uppercase tracking-tighter mb-1 italic cursor-pointer hover:text-gold transition-colors relative inline-block"
+                                >
+                                    {player.name}
+                                </h3>
+                                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em]">{player.team}</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={() => toggleFollowPlayer({ ...player, game: 'Valorant' })}
+                                    className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border ${isFollowingPlayer(player.name)
+                                        ? 'bg-gold text-bg-dark border-gold shadow-[0_0_20px_rgba(212,175,55,0.4)]'
+                                        : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+                                        }`}
+                                >
+                                    {isFollowingPlayer(player.name) ? 'Following' : 'Follow'}
+                                </button>
+                                <div className="flex gap-1 h-8">
+                                    {player.performance.map((val, idx) => (
+                                        <div key={idx} className="w-2.5 bg-gold/20 rounded-t-sm self-end hover:bg-gold transition-colors" style={{ height: `${(val / 30) * 100}%` }} />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div className="text-center xl:text-left"><p className="text-[9px] text-gray-500 uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Target className="w-3 h-3" /> K/D</p><p className="text-md font-black italic">{player.stats.kd}</p></div>
+                            <div className="text-center xl:text-left"><p className="text-[9px] text-gray-500 uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Swords className="w-3 h-3" /> Impact</p><p className="text-md font-black italic">{player.stats.kills}</p></div>
+                            <div className="text-center xl:text-left"><p className="text-[9px] text-gray-500 uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Zap className="w-3 h-3" /> ACS</p><p className="text-md font-black italic">{player.stats.matches}</p></div>
+                            <div className="text-center xl:text-left"><p className="text-[9px] text-gray-500 uppercase font-black tracking-widest flex items-center gap-1 justify-center xl:justify-start mb-1 leading-none"><Trophy className="w-3 h-3" /> MVP</p><p className="text-md font-black italic text-gold">{player.stats.mvp}</p></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        ))}
-    </div>
-);
+            ))}
+        </div>
+    );
+};
 
 const StatsSection = () => (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2 space-y-6">
-            <h3 className="text-2xl font-heading font-black uppercase tracking-tight flex items-center gap-3 italic"><Swords className="text-[#ff4655]" /> Impact Leaderboard</h3>
-            <div className="bg-[#111115] border border-white/5 rounded-[2.5rem] p-8 shadow-2xl">
+            <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-3 italic"><Swords className="text-gold" /> Impact Leaderboard</h3>
+            <div className="bg-card border border-white/5 rounded-[2.5rem] p-8 shadow-2xl">
                 {[1, 2, 3].map((i) => (
                     <div key={i} className={`flex items-center justify-between py-6 ${i !== 3 ? 'border-b border-white/5' : ''} group cursor-default hover:bg-white/5 transition-colors px-4 rounded-2xl`}>
-                        <div className="flex items-center gap-6"><span className={`text-2xl font-black ${i === 1 ? 'text-[#ff4655] italic scale-125' : 'text-gray-500'}`}>0{i}</span><div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center font-black border border-white/5">VCT</div><div><p className="font-black uppercase tracking-tight text-xl leading-none italic group-hover:text-[#ff4655] transition-colors">Tactician {i}</p><p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-1 italic">Global Circuit</p></div></div>
-                        <div className="text-right"><p className="text-[9px] text-gray-500 uppercase font-black mb-1 tracking-widest">Avg Combat</p><p className="font-black text-2xl text-red-500 tracking-tighter italic">{320 - i * 15}</p></div>
+                        <div className="flex items-center gap-6">
+                            <span className={`text-2xl font-black ${i === 1 ? 'text-gold italic scale-125' : 'text-gray-500'}`}>0{i}</span>
+                            <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center font-black border border-white/5">VCT</div>
+                            <div>
+                                <p className="font-black uppercase tracking-tight text-xl leading-none italic group-hover:text-gold transition-colors">Tactician {i}</p>
+                                <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mt-1 italic">Global Circuit</p>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-[9px] text-gray-500 uppercase font-black mb-1 tracking-widest">Avg Combat</p>
+                            <p className="font-black text-2xl text-gold tracking-tighter italic">{320 - i * 15}</p>
+                        </div>
                     </div>
                 ))}
             </div>
         </div>
         <div className="space-y-6">
-            <h3 className="text-2xl font-heading font-black uppercase tracking-tight italic">Tier Distribution</h3>
-            <div className="bg-[#111115] border border-white/10 rounded-[2.5rem] p-8 space-y-8 shadow-2xl">
+            <h3 className="text-2xl font-black uppercase tracking-tight italic">Tier Distribution</h3>
+            <div className="bg-card border border-white/10 rounded-[2.5rem] p-8 space-y-8 shadow-2xl">
                 {[1, 2, 3, 4, 5].map((i) => (
                     <div key={i} className="flex flex-col gap-2">
-                        <div className="flex justify-between items-center"><span className="font-black text-[10px] uppercase tracking-widest italic">{i === 1 ? 'Radiant' : i === 2 ? 'Immortal 3' : 'Immortal'}</span><span className="font-black text-xs text-[#ff4655] italic">{98 - i * i}%</span></div>
-                        <div className="h-2 bg-white/5 border border-white/5 rounded-full overflow-hidden shadow-inner"><div className="h-full bg-gradient-to-r from-[#ff4655] via-[#ff7e87] to-transparent shadow-[0_0_10px_rgba(255,70,85,0.4)]" style={{ width: `${98 - i * i}%` }} /></div>
+                        <div className="flex justify-between items-center"><span className="font-black text-[10px] uppercase tracking-widest italic">{i === 1 ? 'Radiant' : i === 2 ? 'Immortal 3' : 'Immortal'}</span><span className="font-black text-xs text-gold italic">{98 - i * i}%</span></div>
+                        <div className="h-2 bg-white/5 border border-white/5 rounded-full overflow-hidden shadow-inner">
+                            <div className="h-full bg-gradient-to-r from-gold via-amber to-transparent shadow-[0_0_10px_rgba(212,175,55,0.4)]" style={{ width: `${98 - i * i}%` }} />
+                        </div>
                     </div>
                 ))}
             </div>

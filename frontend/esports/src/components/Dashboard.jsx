@@ -1,12 +1,12 @@
 import { useState, useRef } from 'react';
 import {
     User, Users, Heart, Calendar, Camera, ChevronRight, Lock,
-    Bell, BellOff, Trash2, TrendingUp, Eye, ArrowRight, X,
+    Bell, BellOff, Trash2, TrendingUp, Eye, EyeOff, ArrowRight, X,
     Gamepad2, Shield
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { dashboardData } from '../data/dashboardData';
 import { useFollowedTeams } from '../context/FollowedTeamsContext';
+import { useFollowedPlayers } from '../context/FollowedPlayersContext';
 
 const gameLogos = {
     "Free Fire": "https://static-cdn.jtvnw.net/ttv-boxart/502732-600x800.jpg",
@@ -17,22 +17,19 @@ const gameLogos = {
     "Counter-Strike 2": "https://static-cdn.jtvnw.net/ttv-boxart/32399-600x800.jpg"
 };
 
-const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i = 0) => ({
-        opacity: 1,
-        y: 0,
-        transition: { delay: i * 0.08, duration: 0.3, ease: 'easeOut' }
-    })
-};
-
-const Dashboard = ({ onBack }) => {
+const Dashboard = ({ onBack, onNavigate }) => {
     const { followedTeams, unfollowTeam } = useFollowedTeams();
+    const { followedPlayers, unfollowPlayer } = useFollowedPlayers();
+
+    const handleViewTeam = (team) => {
+        const gameSlug = team.game.toLowerCase().replace(/\s+/g, '');
+        onNavigate(`/game/${gameSlug}#teams`);
+    };
+
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user');
         return savedUser ? { ...dashboardData.user, ...JSON.parse(savedUser) } : dashboardData.user;
     });
-    const [followedPlayers, setFollowedPlayers] = useState(dashboardData.followedPlayers);
     const [favGames, setFavGames] = useState(() => {
         const saved = localStorage.getItem('esportsFavGames');
         return saved ? JSON.parse(saved) : ["Valorant", "League of Legends"];
@@ -41,6 +38,7 @@ const Dashboard = ({ onBack }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [activeModal, setActiveModal] = useState(null); // 'password' | 'delete' | null
     const [passwordData, setPasswordData] = useState({ current: '', new: '', confirm: '' });
+    const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false });
     const fileInputRef = useRef(null);
 
     const handleAvatarChange = (e) => {
@@ -62,7 +60,6 @@ const Dashboard = ({ onBack }) => {
             alert("New passwords do not match!");
             return;
         }
-        // In a real app, you'd send this to an API
         console.log("Password changed successfully", passwordData);
         alert("Password updated successfully!");
         setPasswordData({ current: '', new: '', confirm: '' });
@@ -70,10 +67,8 @@ const Dashboard = ({ onBack }) => {
     };
 
     const handleDeleteAccount = () => {
-        // Clear session/localstorage
         localStorage.removeItem('user');
         localStorage.removeItem('esportsFavGames');
-        // Navigate home (mocking by refreshing or redirecting if router available)
         alert("Account deleted. Redirecting to home...");
         window.location.href = '/';
     };
@@ -86,9 +81,6 @@ const Dashboard = ({ onBack }) => {
         });
     };
 
-    const unfollowPlayer = (id) => {
-        setFollowedPlayers(prev => prev.filter(p => p.id !== id));
-    };
 
     const formatPopularity = (num) => {
         if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
@@ -96,26 +88,18 @@ const Dashboard = ({ onBack }) => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0b14] text-white pt-24 pb-20 relative overflow-hidden font-sans">
+        <div className="min-h-screen bg-bg-dark text-white pt-24 pb-20 relative overflow-hidden font-sans">
             {/* Modal Overlay */}
             {activeModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                    <div
                         onClick={() => setActiveModal(null)}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-md"
+                        className="fixed inset-0 bg-black/80 backdrop-blur-md animate-fade-in"
                     />
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative w-full max-w-md bg-[#0d0e1a] border border-white/10 rounded-2xl p-8 overflow-hidden"
-                    >
+                    <div className="relative w-full max-w-md bg-card border border-white/10 rounded-2xl p-8 overflow-hidden animate-scale-in">
                         {/* Accent line for modal */}
-                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#00f3ff] to-transparent" />
+                        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-crimson to-transparent" />
 
                         <button
                             onClick={() => setActiveModal(null)}
@@ -128,7 +112,7 @@ const Dashboard = ({ onBack }) => {
                             <div className="space-y-6">
                                 <div className="space-y-2">
                                     <h3 className="text-2xl font-bold flex items-center gap-3">
-                                        <Lock className="w-6 h-6 text-[#00f3ff]" />
+                                        <Lock className="w-6 h-6 text-crimson" />
                                         Update Password
                                     </h3>
                                     <p className="text-gray-500 text-sm">Enhance your account security with a new password.</p>
@@ -137,38 +121,71 @@ const Dashboard = ({ onBack }) => {
                                 <form onSubmit={handlePasswordChange} className="space-y-4">
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Current Password</label>
-                                        <input
-                                            type="password" required
-                                            value={passwordData.current}
-                                            onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
-                                            className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f3ff]/40 transition-all font-mono"
-                                            placeholder="••••••••"
-                                        />
+                                        <div className="relative group">
+                                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-crimson transition-colors" />
+                                            <input
+                                                type={showPasswords.current ? "text" : "password"}
+                                                required
+                                                value={passwordData.current}
+                                                onChange={(e) => setPasswordData({ ...passwordData, current: e.target.value })}
+                                                className="w-full bg-white/[0.05] border border-white/10 rounded-xl py-3 pl-12 pr-12 text-sm focus:outline-none focus:border-crimson/40 transition-all font-mono"
+                                                placeholder="••••••••"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                            >
+                                                {showPasswords.current ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                            </button>
+                                        </div>
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">New Password</label>
-                                        <input
-                                            type="password" required
-                                            value={passwordData.new}
-                                            onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
-                                            className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f3ff]/40 transition-all font-mono"
-                                            placeholder="••••••••"
-                                        />
+                                        <div className="relative group">
+                                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-crimson transition-colors" />
+                                            <input
+                                                type={showPasswords.new ? "text" : "password"}
+                                                required
+                                                value={passwordData.new}
+                                                onChange={(e) => setPasswordData({ ...passwordData, new: e.target.value })}
+                                                className="w-full bg-white/[0.05] border border-white/10 rounded-xl py-3 pl-12 pr-12 text-sm focus:outline-none focus:border-crimson/40 transition-all font-mono"
+                                                placeholder="••••••••"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                            >
+                                                {showPasswords.new ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                            </button>
+                                        </div>
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">Confirm New Password</label>
-                                        <input
-                                            type="password" required
-                                            value={passwordData.confirm}
-                                            onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })}
-                                            className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00f3ff]/40 transition-all font-mono"
-                                            placeholder="••••••••"
-                                        />
+                                        <div className="relative group">
+                                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-crimson transition-colors" />
+                                            <input
+                                                type={showPasswords.confirm ? "text" : "password"}
+                                                required
+                                                value={passwordData.confirm}
+                                                onChange={(e) => setPasswordData({ ...passwordData, confirm: e.target.value })}
+                                                className="w-full bg-white/[0.05] border border-white/10 rounded-xl py-3 pl-12 pr-12 text-sm focus:outline-none focus:border-crimson/40 transition-all font-mono"
+                                                placeholder="••••••••"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                            >
+                                                {showPasswords.confirm ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <button
                                         type="submit"
-                                        className="w-full bg-[#00f3ff] text-black font-bold uppercase tracking-wider text-xs py-4 rounded-xl shadow-[0_0_20px_rgba(0,243,255,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all mt-4"
+                                        className="w-full bg-crimson text-white font-bold uppercase tracking-wider text-xs py-4 rounded-xl shadow-[0_0_20px_rgba(225,6,0,0.3)] hover:brightness-110 active:scale-[0.98] transition-all mt-4"
                                     >
                                         Update Security Key
                                     </button>
@@ -202,48 +219,47 @@ const Dashboard = ({ onBack }) => {
                                 </div>
                             </div>
                         )}
-                    </motion.div>
+                    </div>
                 </div>
             )}
 
             {/* Subtle ambient background */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#00f3ff]/[0.04] blur-[150px] rounded-full" />
-                <div className="absolute bottom-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#bc13fe]/[0.03] blur-[130px] rounded-full" />
+                <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-crimson/[0.04] blur-[150px] rounded-full" />
+                <div className="absolute bottom-[-15%] left-[-10%] w-[500px] h-[500px] bg-purple/[0.03] blur-[130px] rounded-full" />
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10 animate-fade-in-up">
 
                 {/* ── Header / Breadcrumb ── */}
                 <div className="flex items-center gap-4">
                     <button
                         onClick={onBack}
-                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.05] border border-white/[0.08] hover:bg-[#00f3ff]/10 hover:border-[#00f3ff]/30 transition-all duration-200 group"
+                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.05] border border-white/[0.08] hover:bg-crimson/10 hover:border-crimson/30 transition-all duration-200 group"
                     >
-                        <ChevronRight className="w-4 h-4 rotate-180 text-gray-400 group-hover:text-[#00f3ff] transition-colors" />
+                        <ChevronRight className="w-4 h-4 rotate-180 text-gray-400 group-hover:text-crimson transition-colors" />
                     </button>
                     <div className="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-semibold flex items-center gap-2">
                         <span>Home</span>
                         <ChevronRight className="w-3 h-3 opacity-30" />
-                        <span className="text-[#00f3ff]">Dashboard</span>
+                        <span className="text-crimson">Dashboard</span>
                     </div>
                 </div>
 
                 {/* ═══════════════════════════════════════════
                     SECTION 1 – PROFILE OVERVIEW CARD
                 ═══════════════════════════════════════════ */}
-                <motion.section
-                    initial="hidden" animate="visible" variants={fadeIn}
-                    className="relative rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.04] to-transparent p-6 sm:p-10 overflow-hidden"
-                    style={{ boxShadow: '0 0 40px rgba(0,243,255,0.04), inset 0 1px 0 rgba(255,255,255,0.05)' }}
+                <section
+                    className="relative rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.04] to-transparent p-6 sm:p-10 overflow-hidden card-lift"
+                    style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}
                 >
                     {/* Accent line */}
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#00f3ff]/40 to-transparent" />
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-crimson/40 to-transparent" />
 
                     <div className="flex flex-col md:flex-row items-center gap-8">
                         {/* Avatar */}
                         <div className="relative group shrink-0">
-                            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-white/10 p-1 overflow-hidden bg-[#0d0e1a] group-hover:border-[#00f3ff]/30 transition-all duration-300">
+                            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-white/10 p-1 overflow-hidden bg-bg-dark group-hover:border-crimson/30 transition-all duration-300">
                                 <img
                                     src={user.avatar}
                                     alt="Avatar"
@@ -252,7 +268,7 @@ const Dashboard = ({ onBack }) => {
                             </div>
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="absolute -bottom-1 -right-1 w-9 h-9 bg-[#00f3ff] text-black rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,243,255,0.35)] hover:scale-110 active:scale-95 transition-transform"
+                                className="absolute -bottom-1 -right-1 w-9 h-9 bg-crimson text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-transform"
                             >
                                 <Camera className="w-4 h-4" />
                             </button>
@@ -266,7 +282,7 @@ const Dashboard = ({ onBack }) => {
                                     type="text"
                                     value={user.name}
                                     onChange={(e) => setUser({ ...user, name: e.target.value })}
-                                    className="w-full max-w-md text-3xl sm:text-4xl font-bold bg-white/[0.05] border border-white/10 rounded-xl px-5 py-3 text-white focus:outline-none focus:border-[#00f3ff]/40 transition-all"
+                                    className="w-full max-w-md text-3xl sm:text-4xl font-bold bg-white/[0.05] border border-white/10 rounded-xl px-5 py-3 text-white focus:outline-none focus:border-crimson/40 transition-all"
                                     autoFocus
                                 />
                             ) : (
@@ -274,7 +290,7 @@ const Dashboard = ({ onBack }) => {
                             )}
                             <p className="text-gray-500 text-sm">{user.email}</p>
                             <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00f3ff]/10 border border-[#00f3ff]/20 text-[#00f3ff] text-xs font-semibold uppercase tracking-wider">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-crimson/10 border border-crimson/20 text-crimson text-xs font-semibold uppercase tracking-wider">
                                     <Shield className="w-3.5 h-3.5" />
                                     {user.role}
                                 </span>
@@ -290,28 +306,27 @@ const Dashboard = ({ onBack }) => {
                                 setIsEditing(!isEditing);
                             }}
                             className={`shrink-0 px-7 py-3 rounded-xl font-semibold text-sm uppercase tracking-wider transition-all duration-200 ${isEditing
-                                ? 'bg-[#00f3ff] text-black shadow-[0_0_20px_rgba(0,243,255,0.3)]'
-                                : 'bg-white/[0.05] border border-white/[0.08] text-gray-300 hover:bg-[#00f3ff]/10 hover:border-[#00f3ff]/30 hover:text-white'
+                                ? 'bg-crimson text-white shadow-lg'
+                                : 'bg-white/[0.05] border border-white/[0.08] text-gray-300 hover:bg-crimson/10 hover:border-crimson/30 hover:text-white'
                                 }`}
                         >
                             {isEditing ? 'Save Profile' : 'Edit Profile'}
                         </button>
                     </div>
-                </motion.section>
+                </section>
 
                 {/* ═══════════════════════════════════════════
                     SECTION 2 – STATS OVERVIEW ROW
                 ═══════════════════════════════════════════ */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
-                        { label: 'Favorite Players', value: followedPlayers.length, icon: Heart, color: '#f43f5e' },
-                        { label: 'Favorite Teams', value: followedTeams.length, icon: Users, color: '#bc13fe' },
-                        { label: 'Followed Games', value: favGames.length, icon: Gamepad2, color: '#00f3ff' },
-                        { label: 'Joined Date', value: user.joinedDate || dashboardData.user.joinedDate, icon: Calendar, color: '#f59e0b', isDate: true },
+                        { label: 'Favorite Players', value: followedPlayers.length, icon: Heart, color: '#E10600' }, // Crimson
+                        { label: 'Favorite Teams', value: followedTeams.length, icon: Users, color: '#8A2BE2' }, // Purple
+                        { label: 'Followed Games', value: favGames.length, icon: Gamepad2, color: '#E10600' },
+                        { label: 'Joined Date', value: user.joinedDate || dashboardData.user.joinedDate, icon: Calendar, color: '#C5C5D6', isDate: true },
                     ].map((stat, i) => (
-                        <motion.div
+                        <div
                             key={i}
-                            initial="hidden" animate="visible" variants={fadeIn} custom={i}
                             className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 sm:p-6 hover:-translate-y-1 transition-all duration-200 group cursor-default"
                         >
                             <div
@@ -322,7 +337,7 @@ const Dashboard = ({ onBack }) => {
                             </div>
                             <p className={`font-bold tracking-tight ${stat.isDate ? 'text-lg sm:text-xl' : 'text-2xl sm:text-3xl'}`}>{stat.value}</p>
                             <p className="text-gray-500 text-xs mt-1 uppercase tracking-wider font-medium">{stat.label}</p>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
 
@@ -330,13 +345,12 @@ const Dashboard = ({ onBack }) => {
                     SECTION 3 – FAVORITE PLAYERS
                 ═══════════════════════════════════════════ */}
                 <section>
-                    <SectionHeader title="Favorite Players" accent="Players" />
+                    <SectionHeader title="Favorite Players" accent="Players" count={followedPlayers.length} />
                     {followedPlayers.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {followedPlayers.map((player, i) => (
-                                <motion.div
+                                <div
                                     key={player.id}
-                                    initial="hidden" animate="visible" variants={fadeIn} custom={i}
                                     className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 hover:scale-[1.02] hover:border-white/[0.12] transition-all duration-200 group"
                                 >
                                     <div className="flex items-center gap-4 mb-4">
@@ -351,14 +365,14 @@ const Dashboard = ({ onBack }) => {
                                     <div className="flex items-center justify-between">
                                         <span className="text-[10px] text-gray-600 uppercase tracking-wider font-medium">{player.game}</span>
                                         <button
-                                            onClick={() => unfollowPlayer(player.id)}
+                                            onClick={() => unfollowPlayer(player.name)}
                                             className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/[0.03] hover:bg-red-500/20 text-gray-500 hover:text-red-400 transition-all duration-200"
                                             title="Remove from favorites"
                                         >
                                             <X className="w-3.5 h-3.5" />
                                         </button>
                                     </div>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
                     ) : (
@@ -370,19 +384,18 @@ const Dashboard = ({ onBack }) => {
                     SECTION 4 – FAVORITE TEAMS
                 ═══════════════════════════════════════════ */}
                 <section>
-                    <SectionHeader title="Favorite Teams" accent="Teams" />
+                    <SectionHeader title="Favorite Teams" accent="Teams" count={followedTeams.length} />
                     {followedTeams.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {followedTeams.map((team, i) => (
-                                <motion.div
+                                <div
                                     key={team.id}
-                                    initial="hidden" animate="visible" variants={fadeIn} custom={i}
-                                    className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 hover:border-[#bc13fe]/20 hover:shadow-[0_0_20px_rgba(188,19,254,0.06)] transition-all duration-200 group"
+                                    className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 hover:border-purple/20 hover:shadow-lg transition-all duration-200 group"
                                 >
                                     <div className="flex items-center gap-4 mb-4">
                                         <div
                                             className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg border border-white/10 shrink-0"
-                                            style={{ backgroundColor: (team.color || '#bc13fe') + '15', color: team.color || '#bc13fe' }}
+                                            style={{ backgroundColor: (team.color || '#8A2BE2') + '15', color: team.color || '#8A2BE2' }}
                                         >
                                             {team.logo}
                                         </div>
@@ -391,11 +404,23 @@ const Dashboard = ({ onBack }) => {
                                             <p className="text-gray-500 text-xs">{team.game}</p>
                                         </div>
                                     </div>
-                                    <button className="w-full py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-white/[0.04] border border-white/[0.06] text-gray-400 hover:bg-[#bc13fe]/10 hover:border-[#bc13fe]/30 hover:text-[#bc13fe] transition-all duration-200 flex items-center justify-center gap-2">
-                                        <Eye className="w-3.5 h-3.5" />
-                                        Quick View
-                                    </button>
-                                </motion.div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => handleViewTeam(team)}
+                                            className="flex-1 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-white/[0.04] border border-white/[0.06] text-gray-400 hover:bg-purple/10 hover:border-purple/30 hover:text-purple transition-all duration-200 flex items-center justify-center gap-2"
+                                        >
+                                            <Eye className="w-3.5 h-3.5" />
+                                            View
+                                        </button>
+                                        <button
+                                            onClick={() => unfollowTeam(team.id)}
+                                            className="px-3 py-2 rounded-lg bg-white/[0.03] hover:bg-red-500/20 text-gray-500 hover:text-red-400 transition-all duration-200"
+                                            title="Unfollow Team"
+                                        >
+                                            <X className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
+                                </div>
                             ))}
                         </div>
                     ) : (
@@ -409,14 +434,13 @@ const Dashboard = ({ onBack }) => {
                 <section>
                     <SectionHeader title="Followed Games" accent="Games" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {dashboardData.gameHubs.map((game, i) => {
+                        {dashboardData.gamePages.map((game, i) => {
                             const isFollowed = favGames.includes(game.name);
                             return (
-                                <motion.div
+                                <div
                                     key={game.id}
-                                    initial="hidden" animate="visible" variants={fadeIn} custom={i}
                                     className={`relative rounded-xl border overflow-hidden transition-all duration-200 ${isFollowed
-                                        ? 'border-[#00f3ff]/20 bg-white/[0.04]'
+                                        ? 'border-crimson/20 bg-white/[0.04]'
                                         : 'border-white/[0.06] bg-white/[0.02]'
                                         }`}
                                 >
@@ -427,7 +451,7 @@ const Dashboard = ({ onBack }) => {
                                             alt={game.name}
                                             className={`w-full h-full object-cover transition-all duration-300 ${isFollowed ? 'opacity-90' : 'opacity-40 grayscale hover:grayscale-0 hover:opacity-70'}`}
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0b14] via-[#0a0b14]/60 to-transparent" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-bg-dark via-bg-dark/60 to-transparent" />
                                     </div>
 
                                     <div className="p-4 space-y-3">
@@ -438,19 +462,19 @@ const Dashboard = ({ onBack }) => {
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => {
-                                                    // Navigate to game hub
+                                                    // Navigate to game page
                                                     window.history.pushState({}, '', `/game/${game.slug}`);
                                                     window.dispatchEvent(new PopStateEvent('popstate'));
                                                 }}
-                                                className="flex-1 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-[#00f3ff]/10 border border-[#00f3ff]/20 text-[#00f3ff] hover:bg-[#00f3ff] hover:text-black transition-all duration-200 flex items-center justify-center gap-1.5"
+                                                className="flex-1 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-crimson/10 border border-crimson/20 text-crimson hover:bg-crimson hover:text-white transition-all duration-200 flex items-center justify-center gap-1.5"
                                             >
-                                                Go to Hub
+                                                Go to Page
                                                 <ArrowRight className="w-3.5 h-3.5" />
                                             </button>
                                             <button
                                                 onClick={() => toggleGame(game.name)}
                                                 className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 border ${isFollowed
-                                                    ? 'bg-[#00f3ff]/10 border-[#00f3ff]/30 text-[#00f3ff]'
+                                                    ? 'bg-crimson/10 border-crimson/30 text-crimson'
                                                     : 'bg-white/[0.03] border-white/[0.06] text-gray-500 hover:text-white hover:border-white/20'
                                                     }`}
                                                 title={isFollowed ? 'Unfollow' : 'Follow'}
@@ -459,7 +483,7 @@ const Dashboard = ({ onBack }) => {
                                             </button>
                                         </div>
                                     </div>
-                                </motion.div>
+                                </div>
                             );
                         })}
                     </div>
@@ -474,14 +498,13 @@ const Dashboard = ({ onBack }) => {
                         {/* Trending Players */}
                         <div className="space-y-3">
                             <h4 className="text-xs uppercase tracking-wider text-gray-500 font-semibold flex items-center gap-2">
-                                <TrendingUp className="w-3.5 h-3.5 text-[#f43f5e]" />
+                                <TrendingUp className="w-3.5 h-3.5 text-crimson" />
                                 Trending Players
                             </h4>
                             <div className="space-y-2">
                                 {dashboardData.trendingPlayers.map((player, i) => (
-                                    <motion.div
+                                    <div
                                         key={player.id}
-                                        initial="hidden" animate="visible" variants={fadeIn} custom={i}
                                         className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 flex items-center gap-4 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="text-gray-600 font-bold text-sm w-6 text-center shrink-0">{i + 1}</span>
@@ -492,11 +515,11 @@ const Dashboard = ({ onBack }) => {
                                             <h5 className="font-semibold text-sm truncate">{player.name}</h5>
                                             <p className="text-gray-500 text-xs truncate">{player.team} · {player.game}</p>
                                         </div>
-                                        <div className="flex items-center gap-1.5 text-[#f43f5e] shrink-0">
+                                        <div className="flex items-center gap-1.5 text-crimson shrink-0">
                                             <TrendingUp className="w-3.5 h-3.5" />
                                             <span className="text-xs font-bold">{formatPopularity(player.popularity)}</span>
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -504,20 +527,19 @@ const Dashboard = ({ onBack }) => {
                         {/* Trending Teams */}
                         <div className="space-y-3">
                             <h4 className="text-xs uppercase tracking-wider text-gray-500 font-semibold flex items-center gap-2">
-                                <TrendingUp className="w-3.5 h-3.5 text-[#bc13fe]" />
+                                <TrendingUp className="w-3.5 h-3.5 text-purple" />
                                 Trending Teams
                             </h4>
                             <div className="space-y-2">
                                 {dashboardData.trendingTeams.map((team, i) => (
-                                    <motion.div
+                                    <div
                                         key={team.id}
-                                        initial="hidden" animate="visible" variants={fadeIn} custom={i}
                                         className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 flex items-center gap-4 hover:bg-white/[0.05] transition-all duration-200"
                                     >
                                         <span className="text-gray-600 font-bold text-sm w-6 text-center shrink-0">{i + 1}</span>
                                         <div
                                             className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm border border-white/10 shrink-0"
-                                            style={{ backgroundColor: team.color + '15', color: team.color }}
+                                            style={{ backgroundColor: (team.color || '#8A2BE2') + '15', color: team.color || '#8A2BE2' }}
                                         >
                                             {team.logo}
                                         </div>
@@ -525,11 +547,11 @@ const Dashboard = ({ onBack }) => {
                                             <h5 className="font-semibold text-sm truncate">{team.name}</h5>
                                             <p className="text-gray-500 text-xs">{team.game}</p>
                                         </div>
-                                        <div className="flex items-center gap-1.5 text-[#bc13fe] shrink-0">
+                                        <div className="flex items-center gap-1.5 text-purple shrink-0">
                                             <TrendingUp className="w-3.5 h-3.5" />
                                             <span className="text-xs font-bold">{formatPopularity(team.popularity)}</span>
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -545,8 +567,8 @@ const Dashboard = ({ onBack }) => {
                         {/* Change Password */}
                         <div className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-[#00f3ff]/10 flex items-center justify-center shrink-0">
-                                    <Lock className="w-5 h-5 text-[#00f3ff]" />
+                                <div className="w-10 h-10 rounded-lg bg-crimson/10 flex items-center justify-center shrink-0">
+                                    <Lock className="w-5 h-5 text-crimson" />
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-sm">Change Password</h4>
@@ -555,7 +577,7 @@ const Dashboard = ({ onBack }) => {
                             </div>
                             <button
                                 onClick={() => setActiveModal('password')}
-                                className="px-5 py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider bg-white/[0.04] border border-white/[0.08] text-gray-300 hover:bg-[#00f3ff]/10 hover:border-[#00f3ff]/30 hover:text-[#00f3ff] transition-all duration-200"
+                                className="px-5 py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider bg-white/[0.04] border border-white/[0.08] text-gray-300 hover:bg-crimson/10 hover:border-crimson/30 hover:text-crimson transition-all duration-200"
                             >
                                 Change
                             </button>
@@ -564,9 +586,9 @@ const Dashboard = ({ onBack }) => {
                         {/* Notification Toggle */}
                         <div className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
-                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${notificationsEnabled ? 'bg-[#00f3ff]/10' : 'bg-white/[0.05]'}`}>
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${notificationsEnabled ? 'bg-crimson/10' : 'bg-white/[0.05]'}`}>
                                     {notificationsEnabled
-                                        ? <Bell className="w-5 h-5 text-[#00f3ff]" />
+                                        ? <Bell className="w-5 h-5 text-crimson" />
                                         : <BellOff className="w-5 h-5 text-gray-500" />
                                     }
                                 </div>
@@ -577,12 +599,10 @@ const Dashboard = ({ onBack }) => {
                             </div>
                             <button
                                 onClick={() => setNotificationsEnabled(!notificationsEnabled)}
-                                className={`relative w-14 h-7 rounded-full transition-all duration-200 ${notificationsEnabled ? 'bg-[#00f3ff]' : 'bg-white/10'}`}
+                                className={`relative w-14 h-7 rounded-full transition-all duration-200 ${notificationsEnabled ? 'bg-crimson' : 'bg-white/10'}`}
                             >
-                                <motion.div
-                                    animate={{ x: notificationsEnabled ? 28 : 4 }}
-                                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                    className="absolute top-1 w-5 h-5 bg-white rounded-full shadow-md"
+                                <div
+                                    className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-200 ${notificationsEnabled ? 'translate-x-[28px]' : 'translate-x-[4px]'}`}
                                 />
                             </button>
                         </div>
@@ -615,12 +635,17 @@ const Dashboard = ({ onBack }) => {
 
 /* ── Reusable Sub-components ── */
 
-const SectionHeader = ({ title, accent }) => (
-    <div className="mb-5">
+const SectionHeader = ({ title, accent, count }) => (
+    <div className="mb-5 flex items-center justify-between">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
             {title.replace(accent, '').trim()}{' '}
-            <span className="text-[#00f3ff]">{accent}</span>
+            <span className="text-crimson">{accent}</span>
         </h2>
+        {count !== undefined && (
+            <span className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                {count} {count === 1 ? 'Entry' : 'Entries'}
+            </span>
+        )}
     </div>
 );
 
@@ -630,7 +655,7 @@ const EmptyState = ({ message, icon: Icon }) => (
             <Icon className="w-7 h-7 text-gray-600" />
         </div>
         <p className="text-gray-500 text-sm font-medium">{message}</p>
-        <p className="text-gray-600 text-xs mt-1">Start following from the game hubs to see them here.</p>
+        <p className="text-gray-600 text-xs mt-1">Start following from the game pages to see them here.</p>
     </div>
 );
 

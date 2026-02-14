@@ -1,8 +1,20 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { X, Shield, FileText } from 'lucide-react';
 
 const LegalModal = ({ isOpen, onClose, type }) => {
-    if (!isOpen) return null;
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            setIsVisible(true);
+            document.body.style.overflow = 'hidden';
+        } else {
+            setIsVisible(false);
+            document.body.style.overflow = 'unset';
+        }
+    }, [isOpen]);
+
+    if (!isOpen && !isVisible) return null;
 
     const content = type === 'terms' ? {
         title: "Terms & Services",
@@ -101,71 +113,64 @@ const LegalModal = ({ isOpen, onClose, type }) => {
     const Icon = content.icon;
 
     return (
-        <AnimatePresence>
-            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 overflow-hidden">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={onClose}
-                    className="absolute inset-0 bg-black/80 backdrop-blur-md"
-                />
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: 30 }}
-                    className="relative w-full max-w-4xl bg-[#0a0a0c] border border-white/10 rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh]"
-                >
-                    {/* Header */}
-                    <div className="p-6 md:p-8 bg-black/40 border-b border-white/5 flex items-center justify-between shrink-0">
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 bg-neon-green/10 rounded-xl border border-neon-green/20">
-                                <Icon className="w-6 h-6 text-neon-green" />
+        <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 overflow-hidden transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div
+                onClick={onClose}
+                className="absolute inset-0 bg-black/80 backdrop-blur-md cursor-pointer"
+            />
+            <div
+                className={`relative w-full max-w-4xl bg-[#0a0a0c] border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh] transform transition-all duration-300 ${isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-10'
+                    }`}
+            >
+                {/* Header */}
+                <div className="p-6 md:p-8 bg-black/40 border-b border-white/5 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-crimson/10 rounded-xl border border-crimson/20 shadow-[0_0_15px_rgba(225,6,0,0.2)]">
+                            <Icon className="w-6 h-6 text-crimson" />
+                        </div>
+                        <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic text-white">{content.title}</h2>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-white/5 rounded-full transition-colors group text-gray-500 hover:text-white"
+                    >
+                        <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
+                    </button>
+                </div>
+
+                {/* Content Area */}
+                <div className="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar">
+                    <div className="space-y-10">
+                        {content.sections.map((section, idx) => (
+                            <div key={idx} className="group">
+                                <h3 className="text-lg font-bold uppercase tracking-tight text-white mb-3 group-hover:text-crimson transition-colors italic">
+                                    {section.title}
+                                </h3>
+                                <p className="text-gray-400 leading-relaxed text-sm md:text-base font-medium">
+                                    {section.text}
+                                </p>
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-heading font-black uppercase tracking-tighter italic">{content.title}</h2>
-                        </div>
-                        <button
-                            onClick={onClose}
-                            className="p-2 hover:bg-white/5 rounded-full transition-colors group text-gray-500 hover:text-white"
-                        >
-                            <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
-                        </button>
+                        ))}
                     </div>
 
-                    {/* Content Area */}
-                    <div className="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar">
-                        <div className="space-y-10">
-                            {content.sections.map((section, idx) => (
-                                <div key={idx} className="group">
-                                    <h3 className="text-lg font-heading font-bold uppercase tracking-tight text-white mb-3 group-hover:text-neon-green transition-colors italic">
-                                        {section.title}
-                                    </h3>
-                                    <p className="text-gray-400 leading-relaxed text-sm md:text-base font-body">
-                                        {section.text}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="mt-12 pt-8 border-t border-white/5">
-                            <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-600 italic">
-                                {content.footer}
-                            </p>
-                        </div>
+                    <div className="mt-12 pt-8 border-t border-white/5">
+                        <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-600 italic">
+                            {content.footer}
+                        </p>
                     </div>
+                </div>
 
-                    {/* Footer CTA */}
-                    <div className="p-6 bg-black/40 border-t border-white/5 flex justify-end shrink-0">
-                        <button
-                            onClick={onClose}
-                            className="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest rounded-xl hover:bg-neon-green transition-all transform active:scale-95"
-                        >
-                            Understood
-                        </button>
-                    </div>
-                </motion.div>
+                {/* Footer CTA */}
+                <div className="p-6 bg-black/40 border-t border-white/5 flex justify-end shrink-0">
+                    <button
+                        onClick={onClose}
+                        className="px-8 py-3 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-crimson hover:text-white transition-all transform active:scale-95 shadow-lg"
+                    >
+                        Understood
+                    </button>
+                </div>
             </div>
-        </AnimatePresence>
+        </div>
     );
 };
 

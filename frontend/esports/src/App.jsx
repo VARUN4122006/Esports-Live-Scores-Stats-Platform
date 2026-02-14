@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import PlayerProfile from './components/PlayerProfile';
 import { FollowedTeamsProvider } from './context/FollowedTeamsContext';
+import { FollowedPlayersProvider } from './context/FollowedPlayersContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import WhyUs from './components/WhyUs';
@@ -17,22 +18,16 @@ import ValorantPage from './components/ValorantPage';
 import CS2Page from './components/CS2Page';
 import Dota2Page from './components/Dota2Page';
 import LoLPage from './components/LoLPage';
-import LoaderThree from './components/ui/loader';
+
 
 const LandingPage = ({ onGameSelect }) => (
-  <motion.div
-    key="landing-page-root"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.3 }}
-  >
+  <div className="animate-fade-in">
     <Hero />
     <WhyUs />
     <Games onGameSelect={onGameSelect} />
     <Features />
     <CTA />
-  </motion.div>
+  </div>
 );
 
 function App() {
@@ -40,11 +35,11 @@ function App() {
   const [legalModal, setLegalModal] = useState(null); // 'terms' | 'privacy' | null
   const [path, setPath] = useState(window.location.pathname);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  // Initialize user from localStorage
+
+  // Initialize user from sessionStorage
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
+    const savedUser = sessionStorage.getItem('user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
@@ -52,13 +47,13 @@ function App() {
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    sessionStorage.setItem('user', JSON.stringify(userData));
     setIsAuthModalOpen(false);
   };
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
   };
 
   // Custom Router Sync
@@ -69,15 +64,9 @@ function App() {
   }, []);
 
   const navigate = (newPath) => {
-    setLoading(true);
     const [purePath] = newPath.split('#');
-
-    // Artificial delay for premium loading feel
-    setTimeout(() => {
-      window.history.pushState({}, '', newPath);
-      setPath(purePath);
-      setLoading(false);
-    }, 500);
+    window.history.pushState({}, '', newPath);
+    setPath(purePath);
   };
 
   // Handle anchor scrolling after routing/mounting
@@ -89,30 +78,29 @@ function App() {
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 500); // Delay to account for AnimatePresence mode="wait" transitions
+      }, 500);
       return () => clearTimeout(timer);
     } else {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [path]);
 
   return (
     <FollowedTeamsProvider>
-      <div className="min-h-screen bg-esports-dark text-white selection:bg-neon-green selection:text-black font-sans">
-        <LoaderThree isLoading={loading} />
+      <FollowedPlayersProvider>
+        <div className="min-h-screen bg-bg-dark text-white selection:bg-gold selection:text-bg-dark font-sans">
 
-        <Navbar
-          onSignInClick={() => setIsAuthModalOpen(true)}
-          user={user}
-          onLogout={handleLogout}
-          showNavLinks={path === '/'}
-        />
 
-        <main className="relative">
-          <AnimatePresence mode="wait">
+          <Navbar
+            onSignInClick={() => setIsAuthModalOpen(true)}
+            user={user}
+            onLogout={handleLogout}
+            showNavLinks={path === '/'}
+          />
+
+          <main className="relative">
             {path === '/' && (
               <LandingPage
-                key="route-landing"
                 onGameSelect={(game) => {
                   const slug = game.toLowerCase().replace(/\s+/g, '');
                   navigate(`/game/${slug}`);
@@ -120,131 +108,90 @@ function App() {
               />
             )}
 
+            {path.startsWith('/player/') && (
+              <div className="animate-fade-in">
+                <PlayerProfile />
+              </div>
+            )}
+
             {path === '/game/freefire' && (
-              <motion.div
-                key="route-game-ff"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <div className="animate-fade-in">
                 <FreeFirePage onBack={() => navigate('/#games')} />
-              </motion.div>
+              </div>
             )}
 
             {path === '/game/battlegroundsmobileindia' && (
-              <motion.div
-                key="route-game-bgmi"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <div className="animate-fade-in">
                 <BGMIPage onBack={() => navigate('/#games')} />
-              </motion.div>
+              </div>
             )}
 
             {path === '/game/valorant' && (
-              <motion.div
-                key="route-game-valorant"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <div className="animate-fade-in">
                 <ValorantPage onBack={() => navigate('/#games')} />
-              </motion.div>
+              </div>
             )}
 
             {path === '/game/cs2' && (
-              <motion.div
-                key="route-game-cs2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <div className="animate-fade-in">
                 <CS2Page onBack={() => navigate('/#games')} />
-              </motion.div>
+              </div>
             )}
 
             {path === '/game/dota2' && (
-              <motion.div
-                key="route-game-dota2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <div className="animate-fade-in">
                 <Dota2Page onBack={() => navigate('/#games')} />
-              </motion.div>
+              </div>
             )}
 
             {path === '/dashboard' && (
-              <motion.div
-                key="route-dashboard"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Dashboard onBack={() => navigate('/#games')} />
-              </motion.div>
+              <div className="animate-fade-in">
+                <Dashboard onBack={() => navigate('/#games')} onNavigate={navigate} />
+              </div>
             )}
 
             {path === '/game/leagueoflegends' && (
-              <motion.div
-                key="route-game-lol"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <div className="animate-fade-in">
                 <LoLPage onBack={() => navigate('/#games')} />
-              </motion.div>
+              </div>
             )}
 
             {path.startsWith('/game/') &&
               !['/game/freefire', '/game/battlegroundsmobileindia', '/game/valorant', '/game/cs2', '/game/dota2', '/game/leagueoflegends'].includes(path) && (
-                <motion.div
-                  key="route-fallback"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="min-h-screen flex flex-col items-center justify-center pt-24 text-center px-6"
-                >
-                  <div className="w-24 h-24 bg-neon-blue/10 rounded-[2.5rem] flex items-center justify-center mb-8 border border-neon-blue/20">
+                <div className="min-h-screen flex flex-col items-center justify-center pt-24 text-center px-6 animate-fade-in">
+                  <div className="w-24 h-24 bg-gold/10 rounded-[2.5rem] flex items-center justify-center mb-8 border border-gold/20 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
                     <span className="text-4xl">🛠️</span>
                   </div>
-                  <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 text-neon-blue">Under Construction</h2>
+                  <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 text-gold italic">Under Construction</h2>
                   <p className="text-gray-400 mb-8 uppercase font-bold tracking-widest text-xs max-w-md">
-                    The dedicated hub for <span className="text-white">{path.split('/').pop().toUpperCase()}</span> is currently being forged.
+                    The dedicated page for <span className="text-white">{path.split('/').pop().toUpperCase()}</span> is currently being forged.
                   </p>
                   <button
                     onClick={() => navigate('/#games')}
-                    className="px-10 py-4 bg-white text-black font-black uppercase tracking-widest rounded-full hover:bg-neon-green transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)] active:scale-95"
+                    className="px-10 py-4 bg-white text-bg-dark font-black uppercase tracking-widest rounded-full hover:bg-gold hover:text-bg-dark transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)] active:scale-95"
                   >
                     Return to Base
                   </button>
-                </motion.div>
+                </div>
               )}
-          </AnimatePresence>
-        </main>
+          </main>
 
-        <Footer onLegalClick={(type) => setLegalModal(type)} />
+          <Footer onLegalClick={(type) => setLegalModal(type)} />
 
-        <AuthModal
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-          onLoginSuccess={handleLoginSuccess}
-        />
+          <AuthModal
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+            onLoginSuccess={handleLoginSuccess}
+            onLegalClick={(type) => setLegalModal(type)}
+          />
 
-        <LegalModal
-          isOpen={!!legalModal}
-          onClose={() => setLegalModal(null)}
-          type={legalModal}
-        />
-      </div>
+          <LegalModal
+            isOpen={!!legalModal}
+            onClose={() => setLegalModal(null)}
+            type={legalModal}
+          />
+        </div>
+      </FollowedPlayersProvider>
     </FollowedTeamsProvider>
   );
 }

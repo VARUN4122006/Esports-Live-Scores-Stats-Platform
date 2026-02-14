@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 
 const games = [
     { name: "Free Fire", color: "from-orange-500 to-yellow-500", img: "https://static-cdn.jtvnw.net/ttv-boxart/502732-600x800.jpg" },
@@ -11,35 +10,23 @@ const games = [
 
 const Games = ({ onGameSelect }) => {
     return (
-        <section id="games" className="py-20 bg-black relative">
-            <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-neon-green/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <section id="games" className="py-20 bg-bg-dark relative">
+            <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
 
             <div className="container mx-auto px-6 relative z-10">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
-                >
+                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 animate-fade-in-up">
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-heading font-black mb-2 tracking-tight uppercase">Supported <span className="text-neon-green">Games</span></h2>
+                        <h2 className="text-4xl md:text-5xl font-heading font-black mb-2 tracking-tight uppercase">Supported <span className="text-gold">Games</span></h2>
                         <p className="text-gray-400 font-body"> comprehensive analytics for the biggest titles.</p>
                     </div>
-                </motion.div>
+                </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
                     {games.map((game, index) => (
-                        <motion.div
+                        <div
                             key={index}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.05 }}
-                            whileHover={{ scale: 1.05, y: -5 }}
-                            whileTap={{ scale: 0.95 }}
-                            onTap={() => onGameSelect?.(game.name)}
                             onClick={() => onGameSelect?.(game.name)}
-                            className="relative group cursor-pointer z-20"
+                            className="relative group cursor-pointer z-20 transition-transform duration-300 hover:-translate-y-2"
                             role="button"
                             tabIndex={0}
                             aria-label={`View stats for ${game.name}`}
@@ -51,20 +38,10 @@ const Games = ({ onGameSelect }) => {
                             }}
                         >
                             {/* Inner Glow/Ring */}
-                            <div className="absolute -inset-1 bg-gradient-to-r from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity" />
-
-                            {/* Ripple Effect */}
-                            <div className="absolute inset-0 overflow-hidden rounded-xl">
-                                <motion.div
-                                    initial={{ scale: 0, opacity: 0 }}
-                                    whileTap={{ scale: 2, opacity: 0.2 }}
-                                    transition={{ duration: 0.5 }}
-                                    className="absolute inset-0 bg-white"
-                                />
-                            </div>
+                            <div className="absolute -inset-1 bg-gradient-to-r from-gold/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity" />
 
                             <div className={`absolute inset-0 bg-gradient-to-b ${game.color} opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500`}></div>
-                            <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-900 border border-gray-800 group-hover:border-white/20 transition-all">
+                            <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-900 border border-gray-800 group-hover:border-gold/50 transition-all">
                                 <img
                                     src={game.img}
                                     alt={game.name}
@@ -72,10 +49,10 @@ const Games = ({ onGameSelect }) => {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
                                 <div className="absolute bottom-0 left-0 w-full p-4">
-                                    <h3 className="text-white font-heading font-bold text-sm text-center group-hover:text-neon-green transition-colors uppercase tracking-wider">{game.name}</h3>
+                                    <h3 className="text-white font-heading font-bold text-sm text-center group-hover:text-gold transition-colors uppercase tracking-wider">{game.name}</h3>
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
             </div>

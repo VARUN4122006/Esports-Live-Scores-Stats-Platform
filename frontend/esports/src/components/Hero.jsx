@@ -1,47 +1,11 @@
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { ChevronRight, Target, Zap, Trophy, BarChart3 } from 'lucide-react';
-import { useRef } from 'react';
+import { Gamepad2, Trophy, Crosshair, Sword } from 'lucide-react';
 
 const Hero = () => {
-    const containerRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end start"]
-    });
-
-    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    const handleMouseMove = (e) => {
-        const { clientX, clientY } = e;
-        const { innerWidth, innerHeight } = window;
-        const x = (clientX / innerWidth) - 0.5;
-        const y = (clientY / innerHeight) - 0.5;
-        mouseX.set(x);
-        mouseY.set(y);
-    };
-
-    const springConfig = { damping: 25, stiffness: 150 };
-    const dx = useSpring(mouseX, springConfig);
-    const dy = useSpring(mouseY, springConfig);
-
-    const translate1 = useTransform(dx, [-.5, .5], [-20, 20]);
-    const translate1y = useTransform(dy, [-.5, .5], [-20, 20]);
-    const translate2 = useTransform(dx, [-.5, .5], [20, -20]);
-    const translate2y = useTransform(dy, [-.5, .5], [20, -20]);
-
     return (
-        <section
-            ref={containerRef}
-            onMouseMove={handleMouseMove}
-            className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-esports-dark pt-20"
-        >
+        <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-bg-dark pt-20">
             {/* Background Effects */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_#1a1a1a_0%,_#0a0a0a_100%)] opacity-80"></div>
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_#14141c_0%,_#0b0b0f_100%)] opacity-80"></div>
 
                 {/* Animated Grid */}
                 <div className="absolute inset-0 opacity-10"
@@ -51,98 +15,51 @@ const Hero = () => {
                     }}
                 ></div>
 
-                {/* Floating Elements */}
-                <motion.div style={{ x: translate1, y: translate1y }} className="absolute top-[15%] left-[10%] w-64 h-64 bg-neon-blue/10 rounded-full blur-[80px]" />
-                <motion.div style={{ x: translate2, y: translate2y }} className="absolute bottom-[15%] right-[10%] w-80 h-80 bg-neon-purple/10 rounded-full blur-[100px]" />
-                <motion.div style={{ x: translate1, y: translate2y }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
-
-                {/* Flying Icons */}
-                <FloatingIcon Icon={Target} color="text-neon-green" delay={0} top="20%" left="15%" />
-                <FloatingIcon Icon={Zap} color="text-neon-blue" delay={1} top="70%" left="10%" />
-                <FloatingIcon Icon={Trophy} color="text-yellow-500" delay={2} top="30%" right="15%" />
-                <FloatingIcon Icon={BarChart3} color="text-neon-purple" delay={1.5} top="60%" right="12%" />
+                {/* Static Glow Elements (Replaces heavy floating blurs) */}
+                <div className="absolute top-[20%] left-[15%] w-64 h-64 bg-gold/10 rounded-full blur-[80px]" />
+                <div className="absolute bottom-[20%] right-[15%] w-80 h-80 bg-amber/10 rounded-full blur-[100px]" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
             </div>
 
-            <motion.div
-                style={{ scale, opacity }}
-                className="container mx-auto px-6 relative z-10 text-center"
-            >
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="max-w-5xl mx-auto"
-                >
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-xl mb-8"
-                    >
-                        <span className="flex h-2 w-2 rounded-full bg-neon-green animate-pulse"></span>
+            <div className="container mx-auto px-6 relative z-10 text-center">
+                <div className="max-w-5xl mx-auto animate-fade-in-up">
+                    <div className="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-xl mb-8 card-lift cursor-default">
+                        <span className="flex h-2 w-2 rounded-full bg-gold animate-pulse"></span>
                         <span className="text-gray-300 text-[10px] font-body font-bold tracking-[0.3em] uppercase">
                             Experience the Evolution
                         </span>
-                    </motion.div>
+                    </div>
 
                     <h1 className="text-6xl md:text-8xl lg:text-9xl font-heading font-black mb-8 leading-[0.9] tracking-wide uppercase">
-                        <motion.span
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className="block text-white"
-                        >
+                        <span className="block text-white mb-2">
                             DOMINATE
-                        </motion.span>
-                        <motion.span
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
-                            className="block text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-neon-purple to-neon-green"
-                        >
+                        </span>
+                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-gold via-amber to-gold bg-[length:200%_auto] animate-gradient">
                             THE ARENA
-                        </motion.span>
+                        </span>
                     </h1>
 
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 0.8 }}
-                        className="text-gray-400 text-lg md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-body font-normal"
-                    >
+                    {/* Floating Gaming Icons */}
+                    {/* Floating Gaming Icons */}
+                    <Gamepad2 className="absolute top-[-40px] left-[-60px] md:left-[-100px] w-16 h-16 md:w-24 md:h-24 text-gold/30 -rotate-12 animate-float-slow opacity-80 drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]" />
+                    <Trophy className="absolute bottom-[-10px] right-[-30px] md:right-[-60px] w-12 h-12 md:w-20 md:h-20 text-amber/30 rotate-12 animate-float-delayed opacity-80 drop-shadow-[0_0_15px_rgba(255,181,71,0.5)]" />
+                    <Crosshair className="absolute top-[30%] right-[-90px] md:right-[-160px] w-8 h-8 md:w-14 md:h-14 text-white/50 animate-spin-slow opacity-90 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" />
+                    <Sword className="absolute bottom-[-30px] left-[-30px] md:left-[-80px] w-12 h-12 md:w-20 md:h-20 text-gold/40 -rotate-[115deg] animate-pulse opacity-80 drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]" />
+
+                    <p className="text-gray-400 text-lg md:text-2xl mb-12 max-w-3xl mx-auto leading-relaxed font-body font-normal">
                         Real-time analytics and live insights for the <span className="text-white font-semibold">elite esports competitor</span>.
                         Every frame matters. Every stat counts.
-                    </motion.p>
+                    </p>
 
-                </motion.div>
-            </motion.div>
+                    {/* Buttons removed */}
+                </div>
+            </div>
 
             {/* Bottom Glow Line */}
-            <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-neon-blue/50 to-transparent"></div>
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-20 bg-neon-blue/10 blur-[60px] rounded-full pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-20 bg-gold/10 blur-[60px] rounded-full pointer-events-none"></div>
         </section>
     );
 };
-
-const FloatingIcon = ({ Icon, color, delay, top, left, right }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{
-            opacity: [0.2, 0.5, 0.2],
-            y: [0, -20, 0],
-            rotate: [0, 10, -10, 0]
-        }}
-        transition={{
-            duration: 5,
-            repeat: Infinity,
-            delay: delay,
-            ease: "easeInOut"
-        }}
-        className={`absolute ${color} pointer-events-none opacity-20`}
-        style={{ top, left, right }}
-    >
-        <Icon size={48} strokeWidth={1} />
-    </motion.div>
-);
 
 export default Hero;

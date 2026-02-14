@@ -18,7 +18,7 @@ export const dashboardData = {
         { id: 3, name: "Natus Vincere", game: "Counter-Strike 2", logo: "NV", color: "#ffde00" },
         { id: 4, name: "OG", game: "Dota 2", logo: "OG", color: "#6cc644" },
     ],
-    gameHubs: [
+    gamePages: [
         { id: "freefire", name: "Free Fire", subtitle: "Survival Battle Royale", slug: "freefire", color: "#ffa500" },
         { id: "bgmi", name: "Battlegrounds Mobile India", subtitle: "Strategic Combat Royale", slug: "battlegroundsmobileindia", color: "#ffd700" },
         { id: "valorant", name: "Valorant", subtitle: "Tactical 5v5 FPS", slug: "valorant", color: "#ff4655" },

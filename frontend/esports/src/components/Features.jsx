@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Target, Trophy, Users, MonitorPlay } from 'lucide-react';
 
 const featureList = [
@@ -26,18 +25,13 @@ const featureList = [
 
 const Features = () => {
     return (
-        <section id="features" className="py-20 bg-esports-card">
+        <section id="features" className="py-20 bg-card">
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                    <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="space-y-8"
-                    >
+                    <div className="space-y-8 animate-fade-in-up">
                         <h2 className="text-4xl font-heading font-black leading-tight uppercase tracking-tight">
-                            Powerful <span className="text-neon-blue">Features</span><br />
+                            Powerful <span className="text-gold">Features</span><br />
                             For The Serious Fan
                         </h2>
                         <p className="text-gray-400 text-lg font-body">
@@ -46,32 +40,23 @@ const Features = () => {
 
                         <div className="space-y-6">
                             {featureList.map((item, index) => (
-                                <motion.div
+                                <div
                                     key={index}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1 }}
-                                    className="flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors"
+                                    className="flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 transition-colors duration-200 card-lift"
                                 >
-                                    <div className="p-3 bg-neon-blue/10 text-neon-blue rounded-lg mt-1">
+                                    <div className="p-3 bg-gold/10 text-gold rounded-lg mt-1">
                                         {item.icon}
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-heading font-bold text-white mb-2 uppercase tracking-tight">{item.title}</h3>
                                         <p className="text-gray-400 font-body">{item.description}</p>
                                     </div>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        className="relative h-[600px] w-full bg-gradient-to-br from-gray-900 to-black rounded-3xl border border-gray-800 p-8 shadow-2xl overflow-hidden flex flex-col justify-center"
-                    >
+                    <div className="relative h-[600px] w-full bg-gradient-to-br from-bg-mid to-bg-dark rounded-3xl border border-gray-800 p-8 shadow-2xl overflow-hidden flex flex-col justify-center animate-fade-in-up">
                         {/* Abstract UI representation */}
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_#1e1e2e_0%,_transparent_50%)]"></div>
 
@@ -83,8 +68,8 @@ const Features = () => {
                             </div>
                             <div className="w-full h-48 bg-gray-800/30 rounded-lg border border-gray-700/50 p-4">
                                 <div className="flex justify-between items-center mb-4">
-                                    <div className="w-24 h-6 bg-neon-green/20 rounded animate-pulse"></div>
-                                    <div className="w-16 h-6 bg-red-500/20 rounded animate-pulse"></div>
+                                    <div className="w-24 h-6 bg-gold/20 rounded animate-pulse"></div>
+                                    <div className="w-16 h-6 bg-amber/20 rounded animate-pulse"></div>
                                 </div>
                                 <div className="space-y-2">
                                     <div className="w-full h-2 bg-gray-700 rounded-full"></div>
@@ -93,8 +78,8 @@ const Features = () => {
                             </div>
                         </div>
 
-                        <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-neon-blue/20 blur-[80px] rounded-full"></div>
-                    </motion.div>
+                        <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-gold/20 blur-[80px] rounded-full"></div>
+                    </div>
 
                 </div>
             </div>
